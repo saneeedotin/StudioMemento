@@ -9,15 +9,26 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@libsql/client": "^0.17.4",
+    "animejs": "^4.5.0",
+    "drizzle-orm": "^0.45.2",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
+    "motion": "^13.1.1",
     "next": "16.3.2",
+    "ogl": "^1.0.11",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "three": "^0.185.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
     "tailwindcss": "^4",

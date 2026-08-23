@@ -1,26 +1,112 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-parisienne), cursive;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* light journey */
+  --color-paper: #fff7fa;
+  --color-paper-blush: #faebf3;
+  --color-paper-blue: #edf1fd;
+  --color-ink: #131b42;
+  --color-ink-soft: #505982;
+
+  /* dark journey */
+  --color-night: #070c22;
+  --color-night-soft: #0d1434;
+  --color-night-line: rgba(253, 244, 238, 0.14);
+  --color-cream: #fdf4ee;
+  --color-mist: #a9aecb;
+
+  /* accents */
+  --color-pink: #f4519b;
+  --color-pink-deep: #de3a85;
+  --color-pink-soft: #ffd6e7;
+  --color-blue: #4059f1;
+  --color-blue-deep: #3043ce;
+  --color-lilac: #a44ce0;
+
+  --shadow-card: 0 24px 60px -24px rgb(19 27 66 / 0.28);
+  --shadow-lift: 0 32px 80px -28px rgb(19 27 66 / 0.38);
+  --shadow-glow-pink: 0 14px 48px -12px rgb(244 81 155 / 0.55);
+  --shadow-glow-blue: 0 14px 48px -12px rgb(64 89 241 / 0.5);
+
+  --radius-card: 1.5rem;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-padding-top: 96px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overflow-x: clip;
+}
+
+.hero-gradient {
+  background:
+    radial-gradient(42rem 32rem at 82% 22%, rgb(64 89 241 / 0.22), transparent 70%),
+    radial-gradient(36rem 28rem at 62% 72%, rgb(244 81 155 / 0.24), transparent 70%),
+    radial-gradient(28rem 24rem at 18% 58%, rgb(164 76 224 / 0.12), transparent 72%);
+  animation: hero-drift 16s ease-in-out infinite alternate;
+}
+
+.hero-grid {
+  background-image: linear-gradient(rgb(19 27 66 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(19 27 66 / 0.06) 1px, transparent 1px);
+  background-size: 5rem 5rem;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+@keyframes hero-drift {
+  from { transform: scale(1) translate3d(-1%, -1%, 0); }
+  to { transform: scale(1.08) translate3d(2%, 2%, 0); }
+}
+
+::selection {
+  background: var(--color-pink);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+@utility container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 76rem;
+  padding-inline: 1.5rem;
+  @media (min-width: 768px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-gradient {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
