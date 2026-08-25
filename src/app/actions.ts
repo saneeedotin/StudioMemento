@@ -74,3 +74,14 @@ export async function blockSlot(date: string, slot?: string, reason?: string) {
 export async function getBookingWindow() {
   return { today: getStudioToday(), dates: getBookingDates() };
 }
+
+export async function listBlockedSlots() {
+  await ensureTables();
+  return db.select().from(blockedSlots).where(gte(blockedSlots.date, getStudioToday())).orderBy(asc(blockedSlots.date));
+}
+
+export async function unblockSlot(id: string) {
+  await ensureTables();
+  await db.delete(blockedSlots).where(eq(blockedSlots.id, id));
+  return { ok: true };
+}
