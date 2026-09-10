@@ -13,6 +13,7 @@
     "@libsql/client": "^0.17.4",
     "animejs": "^4.5.0",
     "drizzle-orm": "^0.45.2",
+    "framer-motion": "^13.2.0",
     "gsap": "^3.15.0",
     "lenis": "^1.3.26",
     "motion": "^13.1.1",

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function BentoGrid() {
   return (
@@ -49,7 +50,7 @@ export default function BentoGrid() {
               <div className="absolute bottom-0 left-0 p-8 text-white w-full">
                 <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-[#fff0eb]">Discover our workshop</span>
                 <h3 className="font-display text-3xl font-bold uppercase leading-tight text-white lg:text-4xl">Let's build good memories.</h3>
-                <button className="mt-5 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#043c74] transition-colors hover:bg-[#fff0eb]">More information</button>
+                <Link href="/about" className="mt-5 inline-block rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#043c74] transition-colors hover:bg-[#fff0eb]">More information</Link>
               </div>
             </div>
           </div>
@@ -79,7 +80,7 @@ export default function BentoGrid() {
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight text-white lg:text-3xl break-words">
                   Collaborate with us and shape what's next.
                 </h3>
-                <button className="mt-5 rounded-full bg-[#fecbd7] px-5 py-2 text-sm font-bold text-[#043c74] transition-colors hover:bg-white">Say hello 👋</button>
+                <Link href="/contact" className="mt-5 inline-block rounded-full bg-[#fecbd7] px-5 py-2 text-sm font-bold text-[#043c74] transition-colors hover:bg-white">Say hello 👋</Link>
               </div>
             </div>
           </div>

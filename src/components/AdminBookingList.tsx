@@ -101,31 +101,31 @@ export default function AdminBookingList({
       
       {/* Analytics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-[1.5rem] p-6 shadow-sm border border-gray-100 flex items-center justify-between">
+        <div className="bg-[#FAF6F0] rounded-[1.5rem] p-6 shadow-sm border border-[#1B4083]/10 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#043c74]/60">Upcoming Bookings</p>
-            <h3 className="text-4xl font-display font-bold text-[#043c74] mt-2">{appointments.length}</h3>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#1B4083]/60">Upcoming Bookings</p>
+            <h3 className="text-4xl font-display font-bold text-[#1B4083] mt-2">{appointments.length}</h3>
           </div>
-          <div className="h-12 w-12 rounded-full bg-[#fecbd7]/30 flex items-center justify-center text-[#043c74]">
+          <div className="h-12 w-12 rounded-full bg-[#FFC8D4]/50 flex items-center justify-center text-[#1B4083]">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
           </div>
         </div>
-        <div className="bg-white rounded-[1.5rem] p-6 shadow-sm border border-gray-100 flex items-center justify-between">
+        <div className="bg-[#FAF6F0] rounded-[1.5rem] p-6 shadow-sm border border-[#1B4083]/10 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#043c74]/60">Blocked Days</p>
-            <h3 className="text-4xl font-display font-bold text-[#043c74] mt-2">{blockedSlots.length}</h3>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#1B4083]/60">Blocked Days</p>
+            <h3 className="text-4xl font-display font-bold text-[#1B4083] mt-2">{blockedSlots.length}</h3>
           </div>
-          <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+          <div className="h-12 w-12 rounded-full bg-[#FFC8D4]/50 flex items-center justify-center text-[#1B4083]">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-[#043c74] to-[#0a5a9c] rounded-[1.5rem] p-6 shadow-md text-white flex flex-col justify-between items-start">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/70">Quick Actions</p>
+        <div className="bg-[#1A4083] rounded-[1.5rem] p-6 shadow-md text-[#FAF6F0] flex flex-col justify-between items-start">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#FAF6F0]/70">Quick Actions</p>
           <div className="flex gap-3 w-full mt-4">
-            <button onClick={handleBlockDay} disabled={isPending} className="flex-1 rounded-full bg-white/20 hover:bg-white/30 py-2 text-xs font-bold uppercase tracking-widest transition-colors">
+            <button onClick={handleBlockDay} disabled={isPending} className="flex-1 rounded-full border border-[#FAF6F0]/30 hover:bg-[#FAF6F0]/10 py-2 text-[10px] font-bold uppercase tracking-widest transition-colors">
               Block Day
             </button>
-            <button onClick={downloadCSV} className="flex-1 rounded-full bg-white text-[#043c74] hover:bg-gray-100 py-2 text-xs font-bold uppercase tracking-widest transition-colors">
+            <button onClick={downloadCSV} className="flex-1 rounded-full bg-[#FFC8D4] text-[#1B4083] hover:bg-[#ffb0c2] py-2 text-[10px] font-bold uppercase tracking-widest transition-colors">
               Export CSV
             </button>
           </div>
@@ -134,16 +134,16 @@ export default function AdminBookingList({
 
       {/* Tabs & Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex bg-gray-200 rounded-full p-1">
+        <div className="flex bg-[#1B4083]/5 rounded-full p-1 border border-[#1B4083]/10">
           <button 
             onClick={() => setActiveTab("upcoming")}
-            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "upcoming" ? "bg-white text-[#043c74] shadow-sm" : "text-gray-500 hover:text-[#043c74]"}`}
+            className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === "upcoming" ? "bg-[#1B4083] text-[#FAF6F0] shadow-sm" : "text-[#1B4083]/50 hover:text-[#1B4083]"}`}
           >
             Upcoming
           </button>
           <button 
             onClick={() => setActiveTab("blocked")}
-            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${activeTab === "blocked" ? "bg-white text-[#043c74] shadow-sm" : "text-gray-500 hover:text-[#043c74]"}`}
+            className={`px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === "blocked" ? "bg-[#1B4083] text-[#FAF6F0] shadow-sm" : "text-[#1B4083]/50 hover:text-[#1B4083]"}`}
           >
             Blocked Dates
           </button>
@@ -156,22 +156,22 @@ export default function AdminBookingList({
               placeholder="Search name, email, date..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 text-sm focus:outline-none focus:border-[#043c74]"
+              className="w-full pl-10 pr-4 py-2 rounded-full border border-[#1B4083]/20 bg-transparent text-sm text-[#1B4083] focus:outline-none focus:border-[#1B4083] placeholder:text-[#1B4083]/40"
             />
-            <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#1B4083]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
           </div>
         )}
       </div>
 
       {/* Main Table Content */}
-      <div className="rounded-[1.5rem] bg-white shadow-sm border border-gray-100">
+      <div className="rounded-[1.5rem] bg-[#FAF6F0] shadow-sm border border-[#1B4083]/10 overflow-hidden">
         
         {activeTab === "upcoming" ? (
           <>
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left text-sm text-[#043c74]">
-                <thead className="bg-gray-50/80 uppercase tracking-widest text-[10px] text-gray-500 border-b border-gray-100">
+              <table className="w-full text-left text-sm text-[#1B4083]">
+                <thead className="bg-[#1B4083]/5 uppercase tracking-widest text-[10px] text-[#1B4083]/60 border-b border-[#1B4083]/10">
                   <tr>
                     <th className="px-6 py-4 font-bold">Date & Time</th>
                     <th className="px-6 py-4 font-bold">Client Name</th>
@@ -180,7 +180,7 @@ export default function AdminBookingList({
                     <th className="px-6 py-4 font-bold text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#1B4083]/5">
                   {filteredAppointments.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
@@ -189,7 +189,7 @@ export default function AdminBookingList({
                     </tr>
                   ) : (
                     filteredAppointments.map((apt) => (
-                      <tr key={apt.id} className="transition-colors hover:bg-gray-50/50">
+                      <tr key={apt.id} className="transition-colors hover:bg-[#1B4083]/5">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="font-bold">{apt.date}</div>
                           <div className="opacity-70 text-xs mt-0.5">{apt.slot}</div>
@@ -208,7 +208,7 @@ export default function AdminBookingList({
                           <button
                             disabled={isPending}
                             onClick={() => handleCancel(apt.id)}
-                            className="text-[10px] font-bold text-red-500 uppercase tracking-widest border border-red-200 rounded-lg px-3 py-1.5 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                            className="text-[10px] font-bold text-red-500 uppercase tracking-widest border border-red-200 rounded-full px-4 py-2 hover:bg-red-50 disabled:opacity-50 transition-colors"
                           >
                             Cancel
                           </button>
@@ -221,9 +221,9 @@ export default function AdminBookingList({
             </div>
             
             {/* Mobile Cards */}
-            <div className="md:hidden flex flex-col divide-y divide-gray-100">
+            <div className="md:hidden flex flex-col divide-y divide-[#1B4083]/5">
               {filteredAppointments.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">
+                <div className="p-8 text-center text-[#1B4083]/50 text-sm">
                   No matching appointments found.
                 </div>
               ) : (
@@ -231,21 +231,21 @@ export default function AdminBookingList({
                   <div key={apt.id} className="p-5 flex flex-col gap-3">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="font-bold text-[#043c74]">{apt.name}</span>
-                        <div className="text-xs text-[#043c74]/70 font-medium mt-1">
+                        <span className="font-bold text-[#1B4083]">{apt.name}</span>
+                        <div className="text-xs text-[#1B4083]/70 font-medium mt-1">
                           {apt.date} at {apt.slot}
                         </div>
                       </div>
                       <button
                         disabled={isPending}
                         onClick={() => handleCancel(apt.id)}
-                        className="text-[9px] font-bold text-red-500 uppercase tracking-widest border border-red-200 rounded-md px-2.5 py-1.5 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                        className="text-[9px] font-bold text-red-500 uppercase tracking-widest border border-red-200 rounded-full px-3 py-2 hover:bg-red-50 disabled:opacity-50 transition-colors"
                       >
                         Cancel
                       </button>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-2 text-xs text-[#043c74]/80">
+                    <div className="grid grid-cols-2 gap-2 text-xs text-[#1B4083]/80">
                       <div>
                         <span className="block text-[9px] uppercase tracking-widest opacity-60 font-bold mb-0.5">Phone</span>
                         {apt.phone}
@@ -257,7 +257,7 @@ export default function AdminBookingList({
                     </div>
                     
                     {apt.notes && (
-                      <div className="text-xs text-[#043c74]/80 bg-gray-50 p-2 rounded-md">
+                      <div className="text-xs text-[#1B4083]/80 bg-[#1B4083]/5 p-3 rounded-[1rem]">
                         <span className="block text-[9px] uppercase tracking-widest opacity-60 font-bold mb-1">Notes</span>
                         {apt.notes}
                       </div>
@@ -271,24 +271,24 @@ export default function AdminBookingList({
           <>
             {/* Desktop Table */}
             <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left text-sm text-[#043c74]">
-                <thead className="bg-gray-50/80 uppercase tracking-widest text-[10px] text-gray-500 border-b border-gray-100">
+              <table className="w-full text-left text-sm text-[#1B4083]">
+                <thead className="bg-[#1B4083]/5 uppercase tracking-widest text-[10px] text-[#1B4083]/60 border-b border-[#1B4083]/10">
                   <tr>
                     <th className="px-6 py-4 font-bold">Date Blocked</th>
                     <th className="px-6 py-4 font-bold">Reason</th>
                     <th className="px-6 py-4 font-bold text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#1B4083]/5">
                   {blockedSlots.length === 0 ? (
                     <tr>
-                      <td colSpan={3} className="px-6 py-12 text-center text-gray-400">
+                      <td colSpan={3} className="px-6 py-12 text-center text-[#1B4083]/50">
                         No blocked dates found.
                       </td>
                     </tr>
                   ) : (
                     blockedSlots.map((block) => (
-                      <tr key={block.id} className="transition-colors hover:bg-gray-50/50">
+                      <tr key={block.id} className="transition-colors hover:bg-[#1B4083]/5">
                         <td className="px-6 py-4 whitespace-nowrap font-bold">
                           {block.date} {block.slot ? `(${block.slot})` : "(Whole Day)"}
                         </td>
@@ -299,7 +299,7 @@ export default function AdminBookingList({
                           <button
                             disabled={isPending}
                             onClick={() => handleUnblock(block.id)}
-                            className="text-[10px] font-bold text-green-600 uppercase tracking-widest border border-green-200 rounded-lg px-3 py-1.5 hover:bg-green-50 disabled:opacity-50 transition-colors"
+                            className="text-[10px] font-bold text-green-600 uppercase tracking-widest border border-green-200 rounded-full px-4 py-2 hover:bg-green-50 disabled:opacity-50 transition-colors"
                           >
                             Unblock
                           </button>
@@ -312,26 +312,26 @@ export default function AdminBookingList({
             </div>
 
             {/* Mobile Cards */}
-            <div className="md:hidden flex flex-col divide-y divide-gray-100">
+            <div className="md:hidden flex flex-col divide-y divide-[#1B4083]/5">
               {blockedSlots.length === 0 ? (
-                <div className="p-8 text-center text-gray-400 text-sm">
+                <div className="p-8 text-center text-[#1B4083]/50 text-sm">
                   No blocked dates found.
                 </div>
               ) : (
                 blockedSlots.map((block) => (
                   <div key={block.id} className="p-5 flex justify-between items-center gap-4">
                     <div>
-                      <div className="font-bold text-[#043c74] text-sm">
+                      <div className="font-bold text-[#1B4083] text-sm">
                         {block.date} {block.slot ? `(${block.slot})` : "(Whole Day)"}
                       </div>
-                      <div className="text-[10px] text-[#043c74]/60 uppercase tracking-widest font-semibold mt-1">
+                      <div className="text-[10px] text-[#1B4083]/60 uppercase tracking-widest font-semibold mt-1">
                         {block.reason || "Manual Block"}
                       </div>
                     </div>
                     <button
                       disabled={isPending}
                       onClick={() => handleUnblock(block.id)}
-                      className="text-[9px] font-bold text-green-600 uppercase tracking-widest border border-green-200 rounded-md px-2.5 py-1.5 hover:bg-green-50 disabled:opacity-50 transition-colors whitespace-nowrap"
+                      className="text-[9px] font-bold text-green-600 uppercase tracking-widest border border-green-200 rounded-full px-3 py-2 hover:bg-green-50 disabled:opacity-50 transition-colors whitespace-nowrap"
                     >
                       Unblock
                     </button>

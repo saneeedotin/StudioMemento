@@ -1,106 +1,299 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-script: var(--font-parisienne), cursive;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-baskervville), Baskervville, Georgia, serif;
+  --font-editorial: var(--font-baskervville), Baskervville, Georgia, serif;
+  --font-script: var(--font-satisfy), Satisfy, cursive;
+  --font-epilogue: var(--font-epilogue), Epilogue, sans-serif;
+  --font-satisfy: var(--font-satisfy), Satisfy, cursive;
 
-  /* light journey */
-  --color-paper: #fff7fa;
-  --color-paper-blush: #faebf3;
-  --color-paper-blue: #edf1fd;
-  --color-ink: #131b42;
-  --color-ink-soft: #505982;
+  /* Studio Memento Modular Palette */
+  --color-sm-blue: #1B4083;
+  --color-sm-blue-dark: #0F2753;
+  --color-sm-blue-deep: #081836;
+  --color-sm-pink: #FFC8D4;
+  --color-sm-pink-soft: #FDE8EE;
+  --color-sm-pink-vibrant: #F4A6B8;
+  --color-sm-canvas: #FAF6F0;
+  --color-sm-canvas-light: #FFFDF9;
+  --color-sm-peach: #FFF0EB;
+  --color-sm-border: rgba(27, 64, 131, 0.12);
 
-  /* dark journey */
-  --color-night: #070c22;
-  --color-night-soft: #0d1434;
-  --color-night-line: rgba(253, 244, 238, 0.14);
-  --color-cream: #fdf4ee;
-  --color-mist: #a9aecb;
+  --shadow-modular: 0 20px 50px -15px rgba(27, 64, 131, 0.15);
+  --shadow-modular-lg: 0 30px 70px -20px rgba(27, 64, 131, 0.22);
+  --shadow-glow-pink: 0 10px 40px -10px rgba(255, 200, 212, 0.6);
 
-  /* accents */
-  --color-pink: #f4519b;
-  --color-pink-deep: #de3a85;
-  --color-pink-soft: #ffd6e7;
-  --color-blue: #4059f1;
-  --color-blue-deep: #3043ce;
-  --color-lilac: #a44ce0;
+  --radius-modular: 2rem;
+  --radius-modular-lg: 2.5rem;
 
-  --shadow-card: 0 24px 60px -24px rgb(19 27 66 / 0.28);
-  --shadow-lift: 0 32px 80px -28px rgb(19 27 66 / 0.38);
-  --shadow-glow-pink: 0 14px 48px -12px rgb(244 81 155 / 0.55);
-  --shadow-glow-blue: 0 14px 48px -12px rgb(64 89 241 / 0.5);
+  --ease-modular: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-  --radius-card: 1.5rem;
+/* Studio Memento Romantic Blue Heart Cursor */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body,
+  *,
+  *::before,
+  *::after {
+    cursor: url('/cursors/heart-blue.svg') 16 16, url('/cursors/heart-blue.png') 16 16, auto !important;
+  }
 
-  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Tactile press on mouse click / active */
+  *:active,
+  *:active::before,
+  *:active::after {
+    cursor: url('/cursors/heart-blue-pressed.svg') 16 16, url('/cursors/heart-blue-pressed.png') 16 16, auto !important;
+  }
+
+  /* Interactive pointer elements maintain the heart cursor with tactile click */
+  a,
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  select,
+  summary {
+    cursor: url('/cursors/heart-blue.svg') 16 16, url('/cursors/heart-blue.png') 16 16, pointer !important;
+  }
+
+  a:active,
+  button:active,
+  [role="button"]:active,
+  input[type="submit"]:active,
+  input[type="button"]:active,
+  select:active {
+    cursor: url('/cursors/heart-blue-pressed.svg') 16 16, url('/cursors/heart-blue-pressed.png') 16 16, pointer !important;
+  }
+
+  /* ==========================================================================
+     DARK PAGES & DARK SECTIONS: Romantic Blush Pink Heart Cursor
+     ========================================================================== */
+  /* Whole dark pages (about, contact, appointment, etc.) */
+  html:has(main.bg-\[\#1A4083\]),
+  html:has(main.bg-\[\#1B4083\]),
+  html:has([data-theme="dark"]),
+  html:has(.dark-page),
+  html:has(main.bg-\[\#1A4083\]) body,
+  html:has(main.bg-\[\#1A4083\]) *,
+  html:has(main.bg-\[\#1A4083\]) *::before,
+  html:has(main.bg-\[\#1A4083\]) *::after,
+  /* Dark sections / containers on any page (e.g. AmbientBackground navy on home) */
+  .bg-\[\#1A4083\],
+  .bg-\[\#1A4083\] *,
+  .bg-\[\#1A4083\] *::before,
+  .bg-\[\#1A4083\] *::after,
+  .bg-\[\#0F2753\],
+  .bg-\[\#0F2753\] *,
+  .bg-\[\#0F2753\] *::before,
+  .bg-\[\#0F2753\] *::after,
+  [data-theme="dark"],
+  [data-theme="dark"] *,
+  [data-theme="dark"] *::before,
+  [data-theme="dark"] *::after {
+    cursor: url('/cursors/heart-pink.svg') 16 16, url('/cursors/heart-pink.png') 16 16, auto !important;
+  }
+
+  /* Tactile press on click in dark mode */
+  html:has(main.bg-\[\#1A4083\]) *:active,
+  html:has(main.bg-\[\#1A4083\]) *:active::before,
+  html:has(main.bg-\[\#1A4083\]) *:active::after,
+  .bg-\[\#1A4083\] *:active,
+  .bg-\[\#1A4083\] *:active::before,
+  .bg-\[\#1A4083\] *:active::after,
+  .bg-\[\#0F2753\] *:active,
+  .bg-\[\#0F2753\] *:active::before,
+  .bg-\[\#0F2753\] *:active::after,
+  [data-theme="dark"] *:active,
+  [data-theme="dark"] *:active::before,
+  [data-theme="dark"] *:active::after {
+    cursor: url('/cursors/heart-pink-pressed.svg') 16 16, url('/cursors/heart-pink-pressed.png') 16 16, auto !important;
+  }
+
+  /* Interactive pointer elements in dark mode */
+  html:has(main.bg-\[\#1A4083\]) a,
+  html:has(main.bg-\[\#1A4083\]) button,
+  html:has(main.bg-\[\#1A4083\]) [role="button"],
+  html:has(main.bg-\[\#1A4083\]) input[type="submit"],
+  html:has(main.bg-\[\#1A4083\]) input[type="button"],
+  html:has(main.bg-\[\#1A4083\]) select,
+  html:has(main.bg-\[\#1A4083\]) summary,
+  .bg-\[\#1A4083\] a,
+  .bg-\[\#1A4083\] button,
+  .bg-\[\#1A4083\] [role="button"],
+  .bg-\[\#1A4083\] input[type="submit"],
+  .bg-\[\#1A4083\] input[type="button"],
+  .bg-\[\#1A4083\] select,
+  .bg-\[\#1A4083\] summary,
+  .bg-\[\#0F2753\] a,
+  .bg-\[\#0F2753\] button,
+  .bg-\[\#0F2753\] [role="button"],
+  [data-theme="dark"] a,
+  [data-theme="dark"] button,
+  [data-theme="dark"] [role="button"] {
+    cursor: url('/cursors/heart-pink.svg') 16 16, url('/cursors/heart-pink.png') 16 16, pointer !important;
+  }
+
+  html:has(main.bg-\[\#1A4083\]) a:active,
+  html:has(main.bg-\[\#1A4083\]) button:active,
+  html:has(main.bg-\[\#1A4083\]) [role="button"]:active,
+  .bg-\[\#1A4083\] a:active,
+  .bg-\[\#1A4083\] button:active,
+  .bg-\[\#1A4083\] [role="button"]:active {
+    cursor: url('/cursors/heart-pink-pressed.svg') 16 16, url('/cursors/heart-pink-pressed.png') 16 16, pointer !important;
+  }
+
+  /* Form inputs always preserve native I-beam cursor for accessibility and text editing */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  textarea {
+    cursor: text !important;
+  }
 }
 
 html {
   scroll-padding-top: 96px;
+  background-color: #FAF6F0;
+  direction: ltr; /* Ensure scrollbar is on the right */
+  overflow-x: clip;
+  max-width: 100%;
+  /* Firefox Scrollbar */
+  scrollbar-color: #1B4083 #FAF6F0;
+  scrollbar-width: thin;
+}
+
+/* WebKit Scrollbar (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF6F0; 
+}
+::-webkit-scrollbar-thumb {
+  background-color: #1B4083;
+  border-radius: 10px;
+  border: 3px solid #FAF6F0;
+}
+
+/* Dark Pages Scrollbar */
+html:has(main.bg-\[\#1A4083\]) {
+  scrollbar-color: #FFC8D4 #1A4083;
+}
+html:has(main.bg-\[\#1A4083\]) ::-webkit-scrollbar-track {
+  background: #1A4083;
+}
+html:has(main.bg-\[\#1A4083\]) ::-webkit-scrollbar-thumb {
+  background-color: #FFC8D4;
+  border: 3px solid #1A4083;
 }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background-color: #FAF6F0;
+  color: #1B4083;
   font-family: var(--font-body);
+  font-weight: 500;
   overflow-x: clip;
+  max-width: 100%;
+  position: relative;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
 }
 
-.hero-gradient {
-  background:
-    radial-gradient(42rem 32rem at 82% 22%, rgb(64 89 241 / 0.22), transparent 70%),
-    radial-gradient(36rem 28rem at 62% 72%, rgb(244 81 155 / 0.24), transparent 70%),
-    radial-gradient(28rem 24rem at 18% 58%, rgb(164 76 224 / 0.12), transparent 72%);
-  animation: hero-drift 16s ease-in-out infinite alternate;
+:root {
+  --card-stack-base: 4.25rem;
+  --card-stack-step: 56px;
 }
 
-.hero-grid {
-  background-image: linear-gradient(rgb(19 27 66 / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(19 27 66 / 0.06) 1px, transparent 1px);
-  background-size: 5rem 5rem;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
+@media (min-width: 640px) {
+  :root {
+    --card-stack-base: 5rem;
+    --card-stack-step: 72px;
+  }
 }
 
-@keyframes hero-drift {
-  from { transform: scale(1) translate3d(-1%, -1%, 0); }
-  to { transform: scale(1.08) translate3d(2%, 2%, 0); }
+.font-epilogue,
+.font-lockup-sans,
+.hero-lockup-sans {
+  font-family: var(--font-epilogue), "Epilogue", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.font-satisfy,
+.font-lockup-script,
+.hero-lockup-script {
+  font-family: var(--font-satisfy), "Satisfy", cursive;
+  -webkit-text-stroke: 0.028em currentColor;
+  paint-order: stroke fill;
+}
+
+.font-bricolage {
+  font-family: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-baskervville {
+  font-family: var(--font-baskervville), "Baskervville", Georgia, serif;
+}
+
+/* Custom Scroll Progress Slider */
+.scroll-progress-track {
+  background-color: rgba(27, 64, 131, 0.1); /* transparent blue */
+}
+.scroll-progress-thumb {
+  background-color: #1B4083; /* blue */
+}
+
+html:has(main.bg-\[\#1A4083\]) .scroll-progress-track {
+  background-color: rgba(255, 200, 212, 0.1); /* transparent pink */
+}
+html:has(main.bg-\[\#1A4083\]) .scroll-progress-thumb {
+  background-color: #FFC8D4; /* pink */
 }
 
 ::selection {
-  background: var(--color-pink);
-  color: #fff;
+  background: #FFC8D4;
+  color: #1B4083;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-blue);
+  outline: 2px solid #1B4083;
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-@media (pointer: fine) {
-  html.has-cursor,
-  html.has-cursor * {
-    cursor: none !important;
-  }
-}
-
-@utility container-x {
+@utility container-modular {
   margin-inline: auto;
   width: 100%;
-  max-width: 76rem;
+  max-width: 84rem;
   padding-inline: 1.5rem;
   @media (min-width: 768px) {
     padding-inline: 2.5rem;
   }
+  @media (min-width: 1280px) {
+    padding-inline: 3.5rem;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-gradient {
-    animation: none;
-  }
-
   *,
   *::before,
   *::after {

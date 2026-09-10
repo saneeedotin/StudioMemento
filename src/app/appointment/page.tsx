@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AppointmentPage() {
   return (
-    <main>
+    <main className="flex-1 bg-[#1A4083] text-[#FAF6F0] min-h-screen relative overflow-hidden">
       <AppointmentForm />
     </main>
   );

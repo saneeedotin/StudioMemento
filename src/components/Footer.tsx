@@ -51,11 +51,16 @@ export default function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">
               Visit
             </h3>
-            <p className="mt-4 text-sm leading-relaxed text-cream/85">
+            <a 
+              href={SITE.mapsLink} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="mt-4 block text-sm leading-relaxed text-cream/85 transition-colors hover:text-pink hover:underline"
+            >
               {SITE.addressLine1}
               <br />
               {SITE.addressLine2}
-            </p>
+            </a>
           </div>
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-mist">

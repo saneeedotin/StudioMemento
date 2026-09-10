@@ -6,10 +6,11 @@ export const SITE = {
   // PLACEHOLDER — replace with real details before launch
   phone: "+91 90000 00000",
   phoneHref: "tel:+919000000000",
-  addressLine1: "Studio 12, Memento Lane",
-  addressLine2: "Kochi, Kerala, India",
+  addressLine1: "Shop 10, The Signature Building, near Ganpati Mandir Road",
+  addressLine2: "opposite Mantra Restaurant & Bar, Dombivli East, Maharashtra 421201",
+  mapsLink: "https://maps.app.goo.gl/xswWsu3GhsrDhhwW9",
   email: "hello@studiomemento.in",
-  instagram: "https://instagram.com/studiomemento",
+  instagram: "https://www.instagram.com/studiomemento.in_/",
   pinterest: "https://pinterest.com/studiomemento",
 } as const;
 
