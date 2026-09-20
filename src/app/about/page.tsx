@@ -1,5 +1,6 @@
 import Image from "next/image";
 import SubpageNav from "@/components/SubpageNav";
+import ModularReviewsAndFAQ from "@/components/ModularReviewsAndFAQ";
 
 export default function AboutPage() {
   return (
@@ -11,7 +12,7 @@ export default function AboutPage() {
       <section className="relative pt-32 sm:pt-48 pb-20 px-6 sm:px-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 sm:gap-20">
         <div className="flex-1 z-10">
           <span className="text-[#FFC8D4] font-mono text-xs sm:text-sm tracking-[0.2em] uppercase mb-6 block border border-[#FFC8D4]/30 inline-block px-4 py-1.5 rounded-full">
-            The Atelier
+            Our Studio
           </span>
           <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 leading-[0.9]">
             Crafted for <br />
@@ -43,7 +44,7 @@ export default function AboutPage() {
               <h3 className="font-display text-3xl font-bold">Our Materials</h3>
             </div>
             <p className="opacity-70 leading-relaxed text-lg">
-              We exclusively use conflict-free 18k solid gold, anti-tarnish alloys, and ethically sourced baroque pearls. Every piece is hypoallergenic, meticulously forged, and rigorously tested for absolute longevity.
+              We exclusively use high-quality anti-tarnish alloys, 925 sterling silver, and sustainably sourced pearls. Every piece is hypoallergenic, meticulously crafted, and rigorously tested for everyday longevity.
             </p>
           </div>
           <div>
@@ -52,11 +53,16 @@ export default function AboutPage() {
               <h3 className="font-display text-3xl font-bold">Our Process</h3>
             </div>
             <p className="opacity-70 leading-relaxed text-lg">
-              From raw 3D prototyping to the ancient art of lost-wax casting, our artisans hand-finish each heirloom. We invite clients into our studio for collaborative, bespoke design sessions.
+              From picking out the perfect high-quality chain to assembling a custom charm story, we help you build pieces that mean something. We invite clients into our cozy studio for live styling and permanent jewellery sessions.
             </p>
           </div>
         </div>
       </section>
+
+      {/* Reviews & FAQs Section */}
+      <div className="bg-[#FAF6F0] w-full rounded-t-[3rem] mt-10">
+        <ModularReviewsAndFAQ />
+      </div>
 
     </main>
   );

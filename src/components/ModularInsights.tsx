@@ -13,14 +13,14 @@ const ARTICLES = [
   },
   {
     category: "Craft & Material",
-    title: "The Anatomy of Anti-Tarnish Gold: Why 18k Plating Matters",
+    title: "Gold That Remembers: Why Solid 18k & Anti-Tarnish Alloys Last Forever",
     date: "July 2026",
     image: "/images/Soleil_Statement_anti-tarnish_drop_pearl_earrings.png",
     readTime: "5 min read",
   },
   {
     category: "Behind the Bench",
-    title: "From Vintage Family Heirlooms to Contemporary Daily Wear",
+    title: "From Inherited Keepsakes to Daily Wear: Preserving Memories in Modern Gold",
     date: "June 2026",
     image: "/images/heart-card-editorial.png",
     readTime: "6 min read",
@@ -34,10 +34,10 @@ export default function ModularInsights() {
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <span className="inline-block rounded-full bg-[#FFC8D4] px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#1B4083] mb-4">
-              Journal & Notes
+              ✦ The Memento Journal ✦
             </span>
             <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#1B4083]">
-              Notes from the bench.
+              Stories gathered at the bench.
             </h2>
           </div>
           <Link

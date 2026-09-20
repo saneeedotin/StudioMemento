@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import { bookAppointment, getAvailability, getBookingWindow } from "@/app/actions";
+import { bookAppointment, getAvailability, getBookingWindow, resendVerificationEmail } from "@/app/actions";
 import type { Slot } from "@/lib/booking";
 import { formatSlot } from "@/lib/site";
 import SubpageNav from "@/components/SubpageNav";
@@ -21,7 +21,7 @@ const UPCOMING_WORKSHOPS = [
     spots: 2,
   },
   {
-    title: "Bespoke Ring Making",
+    title: "Custom Charm Bar",
     date: "Nov 05, 2026",
     time: "1:00 PM - 5:00 PM",
     image: "/images/earrings.png",
@@ -44,7 +44,10 @@ export default function AppointmentForm() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", notes: "" });
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [isPending, startTransition] = useTransition();
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   async function refresh(date: string) {
     const result = await getAvailability(date);
@@ -72,6 +75,15 @@ export default function AppointmentForm() {
     };
   }, [selectedDate]);
 
+  useEffect(() => {
+    if (selectedSlot && detailsRef.current) {
+      const timer = setTimeout(() => {
+        detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedSlot]);
+
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selectedDate || !selectedSlot) return;
@@ -83,53 +95,112 @@ export default function AppointmentForm() {
         await refresh(selectedDate);
         return;
       }
+      setPendingVerification(true);
       setSuccess(true);
     });
   }
 
+  async function handleResend() {
+    if (!selectedDate || !selectedSlot || !form.email) return;
+    setResendStatus("sending");
+    try {
+      const res = await resendVerificationEmail(selectedDate, selectedSlot, form.email);
+      if (res.ok) {
+        setResendStatus("sent");
+        setTimeout(() => setResendStatus("idle"), 4000);
+      } else {
+        setResendStatus("error");
+      }
+    } catch {
+      setResendStatus("error");
+    }
+  }
+
   return (
-    <div className="flex-1 bg-[#1A4083] text-[#FAF6F0] min-h-screen relative overflow-hidden pb-20">
+    <div className="flex-1 bg-[#1A4083] text-[#FAF6F0] min-h-screen relative overflow-x-clip pb-20">
       <SubpageNav theme="dark" />
 
       {/* Hero / Booking Section */}
-      <section className="relative pt-32 sm:pt-48 px-6 sm:px-10 max-w-7xl mx-auto flex flex-col lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-x-16 lg:gap-x-24 gap-y-16">
+      <section className="relative pt-28 sm:pt-48 px-4 sm:px-10 max-w-7xl mx-auto flex flex-col lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-x-16 lg:gap-x-24 gap-y-12 sm:gap-y-16">
         
-        {/* Heading & Text (Top Left on Desktop, Top on Mobile) */}
-        <div className="z-10 lg:col-start-1 lg:row-start-1 lg:max-w-xl">
-          <span className="text-[#FFC8D4] font-mono text-xs sm:text-sm tracking-[0.2em] uppercase mb-6 block border border-[#FFC8D4]/30 inline-block px-4 py-1.5 rounded-full w-fit">
-            Private Sessions
-          </span>
-          <h1 className="font-display text-5xl sm:text-7xl lg:text-[5.5rem] font-bold tracking-tighter mb-8 leading-[0.9]">
-            Book your <br />
-            <span className="text-[#FFC8D4] italic font-light tracking-tight">consultation.</span>
-          </h1>
-          <p className="text-lg sm:text-xl opacity-80 leading-relaxed lg:mb-8">
-            Choose a day, find your half hour, and we will have your stories waiting. Our studio doors are open for bespoke design, heirloom resets, and styling.
-          </p>
+        {/* Left Column: Heading, Subheading & Banner Graphic */}
+        <div className="z-10 lg:col-start-1 lg:row-start-1 w-full lg:max-w-xl flex flex-col justify-start">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-[3.4rem] font-bold tracking-tight text-[#FAF6F0] leading-[1.1] mb-2.5 sm:mb-3">
+              Hey <span className="font-serif italic font-normal text-[#FFC8D4]">lovlies,</span>
+            </h1>
+            <p className="text-sm sm:text-base lg:text-[1.05rem] text-[#FAF6F0]/85 font-normal leading-relaxed">
+              Book your slot, confirm your appointment on your mail, and visit us!
+            </p>
+          </div>
+
+          <div className="relative w-full aspect-[1366/768] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/15 drop-shadow-[0_18px_35px_rgba(0,21,54,0.35)] transition-all duration-300 hover:scale-[1.01]">
+            <Image
+              src="/images/build-your-charm-story.png"
+              alt="Welcome to Studio Memento - Build Your Charm Story"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 600px"
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {/* Right: The Booking Card (Right on Desktop, Middle on Mobile) */}
         <div className="z-10 w-full max-w-2xl lg:col-start-2 lg:row-start-1 lg:row-span-2">
-          <div className="bg-[#FAF6F0] rounded-[2.5rem] p-8 sm:p-12 shadow-2xl text-[#1B4083]">
+          <div className="bg-[#FAF6F0] rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-12 shadow-2xl text-[#1B4083]">
             {success ? (
-              <div className="text-center py-10">
-                <span className="text-xs font-bold uppercase tracking-widest opacity-60">You are on the list</span>
-                <h3 className="mt-4 font-display text-4xl font-bold uppercase text-[#1B4083]">See you soon.</h3>
-                <p className="mt-6 text-lg leading-relaxed opacity-80">
-                  Your styling consultation is held for <strong>{dateLabel(selectedDate)}</strong> at <strong>{formatSlot(Number(selectedSlot.split(":")[0]) * 60 + Number(selectedSlot.split(":")[1]))}</strong>.
+              <div className="text-center py-8 sm:py-10">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFC8D4] text-[#1B4083] text-2xl shadow-md">
+                  ✉
+                </div>
+                <span className="inline-block rounded-full bg-[#1B4083]/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#1B4083] mb-2">
+                  Action Required: Check Email
+                </span>
+                <h3 className="mt-2 font-display text-3xl sm:text-4xl font-extrabold uppercase text-[#1B4083]">
+                  Verify Your Email
+                </h3>
+                <p className="mt-3 text-base text-[#1B4083]/85 leading-relaxed max-w-md mx-auto">
+                  We sent a confirmation button to <strong>{form.email}</strong>. Please click the <strong>Confirm My Appointment</strong> button in that email to secure your slot.
                 </p>
-                <button 
-                  type="button" 
-                  onClick={() => { setSuccess(false); setSelectedSlot(""); void refresh(selectedDate); }} 
-                  className="mt-10 rounded-full border border-[#1B4083] px-8 py-3 text-xs uppercase font-bold tracking-widest transition-colors hover:bg-[#1B4083] hover:text-white"
-                >
-                  Book another time
-                </button>
+
+                <div className="mt-6 bg-white rounded-2xl p-4 sm:p-5 text-left border border-[#1B4083]/10 max-w-md mx-auto space-y-2 text-xs sm:text-sm text-[#1B4083] shadow-sm">
+                  <p className="font-bold flex items-center gap-2">
+                    <span>⏱</span>
+                    <span>Held for {dateLabel(selectedDate)} at {formatSlot(Number(selectedSlot.split(":")[0]) * 60 + Number(selectedSlot.split(":")[1]))}</span>
+                  </p>
+                  <p className="text-[12px] opacity-75 leading-relaxed">
+                    This reservation link is held for 30 minutes. Once you click the link, your session will be locked into our calendar!
+                  </p>
+                </div>
+
+                <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resendStatus === "sending"}
+                    className="w-full sm:w-auto rounded-full bg-[#1B4083] px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md transition-all hover:bg-[#0F2753] disabled:opacity-50"
+                  >
+                    {resendStatus === "sending" ? "Resending Email..." : resendStatus === "sent" ? "✓ Resent to Inbox" : "Resend Verification Email"}
+                  </button>
+
+                  <button 
+                    type="button" 
+                    onClick={() => { setSuccess(false); setPendingVerification(false); setSelectedSlot(""); void refresh(selectedDate); }} 
+                    className="w-full sm:w-auto rounded-full border border-[#1B4083]/30 px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#1B4083] transition-colors hover:bg-[#1B4083]/5"
+                  >
+                    Change Slot
+                  </button>
+                </div>
+
+                <p className="mt-6 text-[11px] text-[#1B4083]/60">
+                  Can’t see the email? Please check your Spam or Promotions tab.
+                </p>
               </div>
             ) : (
               <div>
                 <h3 className="font-display text-3xl font-bold mb-2">Select a Time</h3>
-                <p className="opacity-70 mb-8 text-sm">We typically respond to bespoke inquiries within 48 hours.</p>
+                <p className="opacity-70 mb-8 text-sm">We typically respond to custom inquiries within 48 hours.</p>
 
                 {/* Side-by-Side Calendar & Time */}
                 <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
@@ -236,7 +307,11 @@ export default function AppointmentForm() {
                 </div>
 
                 {/* Details Form (Appears below when a time is selected) */}
-                <div className={`transition-all duration-700 ease-in-out overflow-hidden ${selectedSlot ? "max-h-[1000px] opacity-100 mt-10 pt-8 border-t border-[#1B4083]/10" : "max-h-0 opacity-0 mt-0 pt-0 border-t-0"}`}>
+                {/* Details Form (Appears below when a time is selected) */}
+                <div 
+                  ref={detailsRef}
+                  className={`scroll-mt-12 transition-all duration-700 ease-in-out ${selectedSlot ? "max-h-[1200px] opacity-100 mt-10 pt-8 border-t border-[#1B4083]/10" : "max-h-0 opacity-0 mt-0 pt-0 overflow-hidden border-t-0"}`}
+                >
                   <div className="mb-6">
                     <h3 className="font-display text-2xl font-bold">Your Details</h3>
                   </div>
@@ -245,22 +320,55 @@ export default function AppointmentForm() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-[10px] sm:text-xs uppercase font-bold tracking-widest opacity-60 ml-2">Name *</label>
-                        <input required type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full bg-[#1A4083]/5 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#1B4083]/20 outline-none transition-all" placeholder="Jane Doe" />
+                        <input 
+                          required 
+                          type="text" 
+                          value={form.name} 
+                          onChange={(e) => setForm({ ...form, name: e.target.value })} 
+                          className="w-full bg-white/80 border border-[#1B4083]/20 rounded-2xl px-5 py-3.5 text-sm text-[#1B4083] placeholder:text-[#1B4083]/40 focus:bg-white focus:border-[#1B4083] focus:ring-2 focus:ring-[#1B4083]/15 focus:outline-none transition-colors" 
+                          placeholder="Jane Doe" 
+                        />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] sm:text-xs uppercase font-bold tracking-widest opacity-60 ml-2">Phone *</label>
-                        <input required type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full bg-[#1A4083]/5 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#1B4083]/20 outline-none transition-all" placeholder="+1 (555) 000-0000" />
+                        <input 
+                          required 
+                          type="tel" 
+                          value={form.phone} 
+                          onChange={(e) => setForm({ ...form, phone: e.target.value })} 
+                          className="w-full bg-white/80 border border-[#1B4083]/20 rounded-2xl px-5 py-3.5 text-sm text-[#1B4083] placeholder:text-[#1B4083]/40 focus:bg-white focus:border-[#1B4083] focus:ring-2 focus:ring-[#1B4083]/15 focus:outline-none transition-colors" 
+                          placeholder="+91 96190 69460" 
+                        />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
-                      <label className="text-[10px] sm:text-xs uppercase font-bold tracking-widest opacity-60 ml-2">Email</label>
-                      <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full bg-[#1A4083]/5 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#1B4083]/20 outline-none transition-all" placeholder="jane@example.com" />
+                      <div className="flex items-center justify-between ml-2">
+                        <label className="text-[10px] sm:text-xs uppercase font-bold tracking-widest opacity-60">Email *</label>
+                        <span className="text-[10px] text-[#1B4083] font-bold bg-[#FFC8D4] px-2.5 py-0.5 rounded-full">Required</span>
+                      </div>
+                      <input 
+                        required 
+                        type="email" 
+                        value={form.email} 
+                        onChange={(e) => setForm({ ...form, email: e.target.value })} 
+                        className="w-full bg-white/80 border border-[#1B4083]/20 rounded-2xl px-5 py-3.5 text-sm text-[#1B4083] placeholder:text-[#1B4083]/40 focus:bg-white focus:border-[#1B4083] focus:ring-2 focus:ring-[#1B4083]/15 focus:outline-none transition-colors" 
+                        placeholder="jane@example.com" 
+                      />
+                      <p className="text-[11px] text-[#1B4083]/65 ml-2 font-medium">
+                        ✉ We’ll email a 1-click button here to verify and secure your appointment.
+                      </p>
                     </div>
                     
                     <div className="space-y-2">
                       <label className="text-[10px] sm:text-xs uppercase font-bold tracking-widest opacity-60 ml-2">Notes / Vision</label>
-                      <textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} className="w-full bg-[#1A4083]/5 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#1B4083]/20 outline-none transition-all resize-none" placeholder="Tell us what you have in mind..." />
+                      <textarea 
+                        rows={2} 
+                        value={form.notes} 
+                        onChange={(e) => setForm({ ...form, notes: e.target.value })} 
+                        className="w-full bg-white/80 border border-[#1B4083]/20 rounded-2xl px-5 py-3 text-sm text-[#1B4083] placeholder:text-[#1B4083]/40 focus:bg-white focus:border-[#1B4083] focus:ring-2 focus:ring-[#1B4083]/15 focus:outline-none transition-colors resize-none" 
+                        placeholder="Tell us what you have in mind..." 
+                      />
                     </div>
 
                     {message && <p role="alert" className="mt-2 text-sm font-bold text-red-500">{message}</p>}

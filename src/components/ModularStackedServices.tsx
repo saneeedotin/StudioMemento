@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 interface ServiceCard {
   number: string;
@@ -15,88 +18,128 @@ interface ServiceCard {
   pillBg: string;
   pillText: string;
   borderClass: string;
+  image: string;
 }
 
 const SERVICES: ServiceCard[] = [
   {
     number: "01",
-    icon: "✿",
-    title: "Bespoke Jewellery Design",
-    subtitle: "Custom Casting & One-of-a-Kind Milestones",
+    icon: "♥",
+    title: "Karim & Aurelie",
+    subtitle: "Permanent Jewellery Walk-in",
     description:
-      "Every great piece starts with a personal vision. We translate milestones, love stories, and intimate memories into custom hand-carved gold castings and private commissions.",
+      "We fell in love with Studio Memento’s private charm session. It felt less like shopping and more like finding tiny gold reminders of our journey together. My permanent bracelet has not left my wrist for two years.",
     tags: [
-      "Custom 3D Prototyping",
-      "Lost-Wax Casting",
-      "18k Solid Gold & Platinum",
-      "Hand Engraved Initials",
-      "Private Studio Sessions",
+      "Custom Charms",
+      "Permanent Bracelet",
+      "Anniversary Gift",
     ],
     bgColor: "bg-[#FFF2EB]",
     textColor: "text-[#1B4083]",
     pillBg: "bg-white",
     pillText: "text-[#1B4083]",
     borderClass: "border-[#1B4083]/15",
+    image: "/images/heart-card-editorial.png",
   },
   {
     number: "02",
-    icon: "✺",
-    title: "The Charm Bar & Permanent Links",
-    subtitle: "Claspless Micro-Welding & Symbolic Talismans",
+    icon: "✧",
+    title: "Tara Sharma",
+    subtitle: "Everyday Wear Staples",
     description:
-      "Select from over 60 hand-cast symbolic charms, birthstones, and talismans to assemble your bespoke necklace, or experience micro-welded claspless permanent jewellery.",
+      "I was looking for something I could wear every day without worrying about it tarnishing in the shower or at the gym. Their anti-tarnish chains are incredible—still shining bright after months of daily wear!",
     tags: [
-      "Micro-Welded Permanent Chains",
-      "Curated Symbolic Talismans",
-      "Baroque Pearl Extensions",
-      "Custom Charm Stacking",
-      "Live Bar Consultations",
+      "Water-Resistant",
+      "Anti-Tarnish",
+      "Everyday Wear",
     ],
     bgColor: "bg-[#FFC8D4]",
     textColor: "text-[#1B4083]",
     pillBg: "bg-[#1B4083]",
     pillText: "text-white",
     borderClass: "border-[#1B4083]/20",
+    image: "/images/18k_Gold_Plated.png",
   },
   {
     number: "03",
-    icon: "⬡",
-    title: "Heirloom Redesign & Sourcing",
-    subtitle: "Resetting Family Gold & Conflict-Free Gems",
+    icon: "✦",
+    title: "Aditi Rao",
+    subtitle: "Bridal Party Gifts",
     description:
-      "Breathe radiant new life into inherited gold and vintage family jewels. We reset precious stones into sleek, architectural contemporary settings crafted for modern elegance.",
+      "I booked a session for my bridesmaids to each build their own custom charm necklace. It was such a special experience to share with my favorite people, and now we all have a piece that connects us.",
     tags: [
-      "Conflict-Free Gemstone Sourcing",
-      "Family Gold Melting & Recasting",
-      "Diamond & Sapphire Resetting",
-      "Prong & Bezel Restoration",
-      "Lifetime Craft Guarantee",
+      "Charm Bar",
+      "Bridesmaids",
+      "Custom Necklaces",
     ],
     bgColor: "bg-[#E0693E]",
     textColor: "text-[#FAF6F0]",
     pillBg: "bg-white/20",
     pillText: "text-white",
     borderClass: "border-white/25",
+    image: "/images/necklace.png",
   },
 ];
 
 export default function ModularStackedServices() {
+  const containerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      // Animate the intro typography
+      gsap.from(".stacked-title", {
+        scrollTrigger: {
+          trigger: ".intro-container",
+          start: "top 80%",
+        },
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.2,
+        ease: "power4.out",
+      });
+
+      // Animate floating images
+      gsap.from(".float-img-1", {
+        scrollTrigger: { trigger: ".intro-container", start: "top 80%" },
+        y: 100, x: -50, rotation: -15, opacity: 0, duration: 1.5, ease: "power3.out"
+      });
+      
+      gsap.from(".float-img-2", {
+        scrollTrigger: { trigger: ".intro-container", start: "top 80%" },
+        y: 100, x: 50, rotation: 15, opacity: 0, duration: 1.5, delay: 0.2, ease: "power3.out"
+      });
+
+      gsap.from(".float-img-main", {
+        scrollTrigger: { trigger: ".intro-container", start: "top 80%" },
+        y: 120, scale: 0.9, opacity: 0, duration: 1.5, delay: 0.1, ease: "power3.out"
+      });
+
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section 
       id="craft" 
-      className="relative w-full max-w-full py-24 sm:py-36 text-[#FAF6F0] scroll-mt-12 bg-transparent"
+      ref={containerRef}
+      className="relative w-full max-w-full pt-28 sm:pt-36 pb-10 sm:pb-16 text-[#FAF6F0] scroll-mt-20 bg-transparent"
     >
       <div className="container-modular">
           {/* Large Cinematic Typography Intro (Studio Modular Style) */}
-          <div className="relative mb-24 md:mb-36 pt-10 flex flex-col items-center overflow-hidden">
-            <h2 className="text-center font-display text-[12vw] sm:text-[10vw] leading-[0.9] font-bold tracking-tighter text-[#FAF6F0]">
-              From raw<br />inspiration
+          <div className="intro-container relative mb-20 md:mb-36 pt-6 sm:pt-10 flex flex-col items-center overflow-hidden px-4">
+            <h2 className="stacked-title text-center font-display text-[12vw] sm:text-[10vw] leading-[0.9] font-bold tracking-tighter text-[#FAF6F0]">
+              Crafting lifelong<br />stories
             </h2>
             
             {/* Floating Images (Parallax-like static positioning) */}
             <div className="relative h-[280px] sm:h-[380px] md:h-[540px] w-full max-w-5xl mx-auto my-10 md:my-16 flex justify-center items-center overflow-hidden">
               {/* Left float */}
-              <div className="absolute top-0 left-0 md:left-[5%] w-[40%] md:w-[30%] aspect-[3/4] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl -rotate-6 z-0">
+              <div className="float-img-1 absolute top-0 left-0 md:left-[5%] w-[40%] md:w-[30%] aspect-[3/4] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl -rotate-6 z-0">
                  <Image
                    src="/images/heart-card-editorial.png"
                    alt="Bespoke Design"
@@ -107,7 +150,7 @@ export default function ModularStackedServices() {
               </div>
               
               {/* Right float */}
-              <div className="absolute bottom-[-10%] right-0 md:right-[5%] w-[45%] md:w-[35%] aspect-[4/3] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl rotate-3 z-0">
+              <div className="float-img-2 absolute bottom-[-10%] right-0 md:right-[5%] w-[45%] md:w-[35%] aspect-[4/3] rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-2xl rotate-3 z-0">
                  <Image
                    src="/images/all-jewellery.webp"
                    alt="Charm Bar"
@@ -118,7 +161,7 @@ export default function ModularStackedServices() {
               </div>
               
               {/* Center main */}
-              <div className="relative z-10 w-[50%] md:w-[35%] aspect-[4/5] rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-2xl">
+              <div className="float-img-main relative z-10 w-[50%] md:w-[35%] aspect-[4/5] rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-2xl">
                  <Image
                    src="/images/Soleil_Statement_anti-tarnish_drop_pearl_earrings.png"
                    alt="Soleil Statement"
@@ -129,30 +172,30 @@ export default function ModularStackedServices() {
               </div>
             </div>
             
-            <h2 className="text-center font-display text-[12vw] sm:text-[10vw] leading-[0.9] font-bold tracking-tighter text-[#FAF6F0]">
-              to lifelong<br />heirloom.
+            <h2 className="stacked-title text-center font-display text-[12vw] sm:text-[10vw] leading-[0.9] font-bold tracking-tighter text-[#FAF6F0]">
+              one piece<br />at a time.
             </h2>
 
             <div className="mt-10 text-center max-w-xl mx-auto px-4">
               <span className="font-mono text-xs sm:text-sm uppercase tracking-[0.25em] text-[#FFC8D4] block mb-3">
-                SERVICES & ATELIER
+                CLIENT STORIES
               </span>
               <p className="text-sm sm:text-base text-[#FAF6F0]/80 leading-relaxed font-sans">
-                Three bespoke pathways to celebrate milestones, express devotion, and create timeless modern talismans.
+                Real experiences from our lovely clients who trusted us with their memories.
               </p>
             </div>
           </div>
 
           {/* Sticky Stacked Cards Accordion Container (Studio Modular Signature Interaction) */}
-          <div className="relative max-w-5xl mx-auto pb-48 sm:pb-72 lg:pb-96">
+          <div className="relative max-w-5xl mx-auto pb-8 sm:pb-12 lg:pb-16">
             {SERVICES.map((service, index) => (
               <div
                 key={service.number}
-                className={`sticky rounded-[2rem] sm:rounded-[2.5rem] px-6 sm:px-9 lg:px-11 pt-3.5 sm:pt-4 pb-7 sm:pb-9 ${service.bgColor} ${service.textColor} border ${service.borderClass}`}
+                className={`sticky rounded-[2rem] sm:rounded-[2.5rem] px-5 sm:px-9 lg:px-11 pt-3.5 sm:pt-4 pb-6 sm:pb-9 ${service.bgColor} ${service.textColor} border ${service.borderClass}`}
                 style={{
-                  top: `calc(var(--card-stack-base) + ${index} * var(--card-stack-step))`,
+                  top: `calc(7rem + ${index * 3}rem)`,
                   zIndex: index + 10,
-                  marginBottom: index === SERVICES.length - 1 ? "0px" : "18vh",
+                  marginBottom: index === SERVICES.length - 1 ? "0px" : "20vh",
                   boxShadow: `0 -12px 32px -4px rgba(0, 0, 0, 0.16), 0 25px 50px -12px rgba(0, 0, 0, 0.32)`,
                 }}
               >
@@ -184,29 +227,25 @@ export default function ModularStackedServices() {
 
                     <div className="mt-6 sm:mt-7">
                       <Link
-                        href="/appointment"
+                        href="/gallery"
                         className="group inline-flex items-center gap-2.5 text-xs sm:text-sm font-bold uppercase tracking-wider underline underline-offset-8 transition-opacity hover:opacity-75"
                       >
-                        <span>Explore this service</span>
+                        <span>View our gallery</span>
                         <span className="transition-transform group-hover:translate-x-1">→</span>
                       </Link>
                     </div>
                   </div>
 
-                  {/* Right Side: Specific Sub-Pills / Offerings */}
+                  {/* Right Side: Image Only */}
                   <div className="lg:col-span-5 flex flex-col justify-center">
-                    <span className="text-[11px] sm:text-xs uppercase tracking-widest font-bold opacity-65 mb-3 block">
-                      Atelier Inclusions
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {service.tags.map((tag, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className={`rounded-full px-3 py-1.5 text-xs font-semibold tracking-tight shadow-sm ${service.pillBg} ${service.pillText}`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                    <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-current/10 group">
+                      <Image 
+                        src={service.image} 
+                        alt={service.title} 
+                        fill 
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 1024px) 100vw, 40vw"
+                      />
                     </div>
                   </div>
                 </div>

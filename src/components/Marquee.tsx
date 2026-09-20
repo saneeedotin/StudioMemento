@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 export default function Marquee() {
-  const row1 = ["Bespoke", "Fine Necklaces", "Bridal", "Everyday Elegance", "Diamonds", "Gold", "Heirlooms"];
+  const row1 = ["Custom", "Fine Necklaces", "Bridal", "Everyday Elegance", "Diamonds", "Gold", "Heirlooms"];
   const row2 = ["Earrings", "Pendants", "Custom Design", "Engagement Rings", "Ethical Sourcing", "Bracelets", "Charms"];
 
   return (

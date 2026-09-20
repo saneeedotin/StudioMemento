@@ -5,11 +5,13 @@ import { ReactNode } from "react";
 interface AmbientBackgroundProps {
   children: ReactNode;
   variant?: "pink" | "peach" | "navy";
+  className?: string;
 }
 
 export default function AmbientBackground({
   children,
   variant = "pink",
+  className = "",
 }: AmbientBackgroundProps) {
   // Define sphere colors based on variant
   const colors =
@@ -42,9 +44,9 @@ export default function AmbientBackground({
     <div
       className={`relative w-full max-w-full ${
         variant === "navy"
-          ? "bg-[#1A4083] text-[#FAF6F0] rounded-t-[2.5rem] sm:rounded-t-[4rem] rounded-b-[2.5rem] sm:rounded-b-[4rem] -mt-8 sm:-mt-16 z-20"
+          ? "dark-section bg-[#1A4083] text-[#FAF6F0] rounded-t-[2.5rem] sm:rounded-t-[4rem] rounded-b-[2.5rem] sm:rounded-b-[4rem] -mt-8 sm:-mt-16 z-20"
           : ""
-      }`}
+      } ${className}`}
     >
       {/* CSS Animations for organic floating ambient motion */}
       <style>{`
@@ -66,7 +68,7 @@ export default function AmbientBackground({
       `}</style>
 
       {/* Ambient Spheres Container - Contained within inset-0 with overflow-hidden */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         {variant === "pink" ? (
           <>
             {/* Top Left Sphere (Hero) */}
@@ -81,28 +83,68 @@ export default function AmbientBackground({
               style={{ background: colors.glow2, opacity: 0.65, filter: "blur(50px)" }}
             />
 
+            {/* Seamless Bridge Spheres (Made To Mean Something Chapter) */}
+            <div
+              className="absolute top-[18%] -left-[10%] h-[60vw] w-[60vw] max-w-[950px] rounded-full animate-ambient-1"
+              style={{ background: colors.glow1, opacity: 0.55, filter: "blur(50px)" }}
+            />
+            <div
+              className="absolute top-[22%] -right-[8%] h-[65vw] w-[65vw] max-w-[1000px] rounded-full animate-ambient-3"
+              style={{ background: colors.glowPeach, opacity: 0.5, filter: "blur(50px)" }}
+            />
+
             {/* Mid Left Sphere (Manifesto) */}
             <div
               className="absolute top-[32%] -left-[15%] h-[65vw] w-[65vw] max-w-[1000px] rounded-full animate-ambient-1"
-              style={{ background: colors.glow3, opacity: 0.6, filter: "blur(50px)" }}
+              style={{ background: colors.glow3, opacity: 0.55, filter: "blur(80px)" }}
             />
 
             {/* Mid Right Sphere (Manifesto Reel) */}
             <div
-              className="absolute top-[44%] -right-[10%] h-[70vw] w-[70vw] max-w-[1100px] rounded-full animate-ambient-3"
-              style={{ background: colors.glow4, opacity: 0.65, filter: "blur(50px)" }}
+              className="absolute top-[42%] -right-[10%] h-[70vw] w-[70vw] max-w-[1100px] rounded-full animate-ambient-3"
+              style={{ background: colors.glow4, opacity: 0.6, filter: "blur(80px)" }}
             />
 
-            {/* Transition Bridge Sphere (Into Cases Grid) */}
+            {/* Bridge Sphere: Manifesto into Cases Grid seam */}
             <div
-              className="absolute top-[64%] left-[20%] h-[75vw] w-[75vw] max-w-[1200px] rounded-full animate-ambient-2"
-              style={{ background: colors.glow2, opacity: 0.6, filter: "blur(50px)" }}
+              className="absolute top-[48%] -left-[10%] h-[68vw] w-[68vw] max-w-[1050px] rounded-full animate-ambient-1"
+              style={{ background: colors.glow1, opacity: 0.55, filter: "blur(80px)" }}
+            />
+
+            {/* Cases Grid Headline & Archives Sphere */}
+            <div
+              className="absolute top-[54%] -right-[8%] h-[68vw] w-[68vw] max-w-[1050px] rounded-full animate-ambient-2"
+              style={{ background: colors.glowPeach, opacity: 0.5, filter: "blur(80px)" }}
+            />
+
+            {/* Cases Grid Center-Left Masonry Sphere */}
+            <div
+              className="absolute top-[60%] left-[12%] h-[72vw] w-[72vw] max-w-[1150px] rounded-full animate-ambient-3"
+              style={{ background: colors.glow3, opacity: 0.55, filter: "blur(80px)" }}
+            />
+
+            {/* Transition Bridge Sphere (Into Lower Cases Grid) */}
+            <div
+              className="absolute top-[66%] left-[20%] h-[75vw] w-[75vw] max-w-[1200px] rounded-full animate-ambient-2"
+              style={{ background: colors.glow2, opacity: 0.55, filter: "blur(80px)" }}
+            />
+
+            {/* Cases Grid Right Edge Glow */}
+            <div
+              className="absolute top-[72%] -right-[10%] h-[65vw] w-[65vw] max-w-[1000px] rounded-full animate-ambient-1"
+              style={{ background: colors.glow4, opacity: 0.55, filter: "blur(80px)" }}
+            />
+
+            {/* Reviews & FAQ Upper Bridge */}
+            <div
+              className="absolute top-[78%] -left-[12%] h-[70vw] w-[70vw] max-w-[1100px] rounded-full animate-ambient-2"
+              style={{ background: colors.glow1, opacity: 0.5, filter: "blur(80px)" }}
             />
 
             {/* Bottom Sphere (Cases Grid Showcase) */}
             <div
               className="absolute bottom-[3%] -left-[10%] h-[65vw] w-[65vw] max-w-[1000px] rounded-full animate-ambient-1"
-              style={{ background: colors.glowPeach, opacity: 0.55, filter: "blur(50px)" }}
+              style={{ background: colors.glowPeach, opacity: 0.5, filter: "blur(80px)" }}
             />
           </>
         ) : variant === "peach" ? (
@@ -174,7 +216,7 @@ export default function AmbientBackground({
       </div>
 
       {/* Content */}
-      <div className="relative z-10">{children}</div>
+      <div className="relative">{children}</div>
     </div>
   );
 }

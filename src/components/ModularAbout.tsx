@@ -95,7 +95,7 @@ export default function ModularAbout() {
             {/* Category Tag with Location Badge */}
             <div className="about-fade flex items-center gap-3 mb-6">
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#FFC8D4] border border-[#FFC8D4]/30 px-3.5 py-1.5 rounded-full backdrop-blur-sm bg-white/5">
-                The Atelier & Philosophy
+                ✦ Our Story & Studio ✦
               </span>
               <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-white/60 font-medium">
                 <span>📍</span>
@@ -105,40 +105,40 @@ export default function ModularAbout() {
 
             {/* Editorial Headline with Baskervville Accent */}
             <h2 className="about-fade font-display text-4xl sm:text-5xl lg:text-[3.8rem] font-bold tracking-tight leading-[1.08] text-white">
-              Fine jewellery rooted in{" "}
+              A little more{" "}
               <span className="font-serif italic font-normal text-[#FFC8D4] tracking-tight">
-                emotion
+                you
               </span>
-              , not mass production.
+              , everyday.
             </h2>
 
             {/* Narrative Story */}
             <p className="about-fade mt-8 text-base sm:text-lg leading-relaxed text-white/85">
-              Studio Memento was founded on a simple conviction: jewellery should never be generic. It should hold the weight of an anniversary, the memory of a turning point, or the celebration of who you are becoming.
+              Studio Memento was founded on a simple conviction: jewellery should hold meaning. Whether you are getting matching permanent bracelets with a best friend, curating a custom charm necklace, or finding a daily anti-tarnish staple, it is about making memories tangible.
             </p>
             <p className="about-fade mt-4 text-base sm:text-lg leading-relaxed text-white/75">
-              Working alongside master metalsmiths and lapidaries in our private studio, every piece is sculpted with 18k solid gold, anti-tarnish alloys, and sustainably sourced baroque pearls that remain with you for a lifetime.
+              Inside our cozy Dombivli studio, we help you build your charm story. From picking out the perfect high-quality anti-tarnish chain to getting seamlessly sparked, every piece is made to mean something.
             </p>
 
-            {/* Interactive Atelier Highlight Pillars */}
+            {/* Interactive Highlights */}
             <div className="about-fade mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               
               <div className="group rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 p-4 transition-all duration-300 hover:-translate-y-1">
                 <span className="text-xl mb-2 block transition-transform group-hover:scale-110">✦</span>
-                <p className="font-display text-sm font-semibold text-white">Bespoke Casting</p>
-                <p className="text-xs text-white/60 mt-1">Sculpted lost-wax & 18k solid gold</p>
+                <p className="font-display text-sm font-semibold text-white">Permanent Jewellery</p>
+                <p className="text-xs text-white/60 mt-1">Seamless, painless, and forever</p>
               </div>
 
               <div className="group rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 p-4 transition-all duration-300 hover:-translate-y-1">
                 <span className="text-xl mb-2 block transition-transform group-hover:scale-110">✿</span>
-                <p className="font-display text-sm font-semibold text-white">Anti-Tarnish</p>
-                <p className="text-xs text-white/60 mt-1">Tested for lifelong waterproof wear</p>
+                <p className="font-display text-sm font-semibold text-white">Everyday Wear</p>
+                <p className="text-xs text-white/60 mt-1">High-quality & water-resistant</p>
               </div>
 
               <div className="group rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 p-4 transition-all duration-300 hover:-translate-y-1">
                 <span className="text-xl mb-2 block transition-transform group-hover:scale-110">👀</span>
-                <p className="font-display text-sm font-semibold text-white">Private Studio</p>
-                <p className="text-xs text-white/60 mt-1">1-on-1 custom styling sessions</p>
+                <p className="font-display text-sm font-semibold text-white">The Charm Bar</p>
+                <p className="text-xs text-white/60 mt-1">Build your personal charm story</p>
               </div>
 
             </div>
@@ -149,7 +149,7 @@ export default function ModularAbout() {
                 href="/appointment"
                 className="group inline-flex items-center gap-3 rounded-full bg-[#FAF6F0] px-8 py-4 text-base font-semibold tracking-tight text-[#1B4083] transition-all duration-300 hover:bg-white hover:scale-105 shadow-xl"
               >
-                <span>Meet with our stylists</span>
+                <span>Meet with our team</span>
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FFC8D4] text-[#1B4083] transition-transform duration-300 group-hover:translate-x-1">
                   →
                 </span>
@@ -178,7 +178,7 @@ export default function ModularAbout() {
                     : "text-white/70 hover:text-white"
                 }`}
               >
-                The Atelier Room
+                The Studio
               </button>
               <button
                 type="button"
@@ -189,7 +189,7 @@ export default function ModularAbout() {
                     : "text-white/70 hover:text-white"
                 }`}
               >
-                The Jewellery
+                The Charms
               </button>
             </div>
 
@@ -204,7 +204,7 @@ export default function ModularAbout() {
                   />
                   <text className="text-[9.5px] font-mono tracking-[0.24em] uppercase">
                     <textPath href="#circlePath">
-                      ✦ STUDIO MEMENTO ✦ HEIRLOOM ATELIER ✦
+                      ✦ STUDIO MEMENTO ✦ PERMANENT JEWELLERY ✦
                     </textPath>
                   </text>
                 </svg>
@@ -221,7 +221,7 @@ export default function ModularAbout() {
               <div className={`absolute inset-0 transition-opacity duration-700 ${activeView === "atelier" ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"}`}>
                 <Image
                   src="/images/Workshop.png"
-                  alt="Studio Memento Artisan Workshop Bench"
+                  alt="Studio Memento Charm Bar"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-transform duration-1000 ease-out hover:scale-105"
@@ -233,7 +233,7 @@ export default function ModularAbout() {
               <div className={`absolute inset-0 transition-opacity duration-700 ${activeView === "pieces" ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"}`}>
                 <Image
                   src="/images/18k_Gold_Plated.png"
-                  alt="Client enjoying Studio Memento 18k handcrafted jewellery"
+                  alt="Client enjoying Studio Memento everyday jewellery"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-transform duration-1000 ease-out hover:scale-105"
@@ -248,7 +248,7 @@ export default function ModularAbout() {
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                 </span>
                 <span>
-                  {activeView === "atelier" ? "Atelier Open · Dombivli East" : "Handcrafted 18k Solid Gold"}
+                  {activeView === "atelier" ? "Studio Open · Dombivli East" : "High-Quality Anti-Tarnish"}
                 </span>
               </div>
             </div>
@@ -269,10 +269,10 @@ export default function ModularAbout() {
               </div>
               <div className="pt-2 px-1 text-center">
                 <p className="font-display text-[11px] sm:text-xs font-bold text-[#1B4083] truncate">
-                  Baroque Pearl & 18k Gold
+                  Anti-Tarnish Pearl Drop
                 </p>
                 <p className="font-serif italic text-[10px] text-[#1B4083]/70">
-                  Cast by hand in studio
+                  Perfect for everyday wear
                 </p>
               </div>
             </div>

@@ -7,7 +7,7 @@ const TESTIMONIALS = [
     quote:
       "We fell in love with Studio Memento’s private charm session. It felt less like shopping and more like finding tiny gold reminders of our journey together. My permanent bracelet has not left my wrist for two years.",
     author: "Karim & Aurelie",
-    role: "Bespoke Charm & Permanent Link Clients",
+    role: "Custom Charm & Permanent Link Clients",
     cardBg: "bg-[#1B4083]",
     textColor: "text-white",
     quoteColor: "text-[#FFC8D4]",
@@ -36,7 +36,7 @@ export default function ModularTestimonials() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative py-24 sm:py-36 text-[#1B4083]">
+    <section id="reviews" className="relative py-24 sm:py-36 text-[#1B4083]">
       <div className="container-modular max-w-7xl">
         {/* Intro */}
         <div className="mb-16 max-w-3xl">

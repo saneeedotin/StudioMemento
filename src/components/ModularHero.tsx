@@ -4,408 +4,393 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { scrollToId } from "@/components/SmoothScroll";
+import { MobilePolaroidStrip } from "@/components/PolaroidStrip";
+import { useMenu } from "@/components/MenuContext";
 
 export default function ModularHero() {
-  const rootRef = useRef<HTMLElement>(null);
-  const leftCardRef = useRef<HTMLDivElement>(null);
-  const rightCardRef = useRef<HTMLDivElement>(null);
-  const studioRef = useRef<HTMLHeadingElement>(null);
-  const mementoRef = useRef<HTMLHeadingElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
+  const textLayerRef = useRef<HTMLDivElement>(null);
+  const phrase1Ref = useRef<HTMLDivElement>(null);
+  const phrase2Ref = useRef<HTMLDivElement>(null);
+  const modelLayerRef = useRef<HTMLDivElement>(null);
+  const leftBtnRef = useRef<HTMLDivElement>(null);
+  const rightBtnRef = useRef<HTMLDivElement>(null);
+  
+  const [mounted, setMounted] = useState(false);
+  const [isHeaderDark, setIsHeaderDark] = useState(false);
+  const { isMenuOpen, toggleMenu } = useMenu();
 
-  const studioChars = ["S", "t", "u", "d", "i", "o"];
-  const mementoChars = ["M", "e", "m", "e", "n", "t", "o"];
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: { ease: "power4.out" },
-        delay: 0.2,
+      // 1. Loading Animation Timeline (Plays on load)
+      const loadTl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+        delay: 0.1
       });
 
-      tl.from(".hero-header", { opacity: 0, y: -20, duration: 0.8 })
-        // Studio architectural character stagger (clean, upright, no slant/tilt)
-        .from(".studio-char", {
-          opacity: 0,
-          y: 60,
-          duration: 1.0,
-          stagger: 0.04,
-          ease: "power3.out",
-          clearProps: "transform,opacity",
-        }, "-=0.5")
-        // Floating cards emerge
-        .from(leftCardRef.current, { opacity: 0, scale: 0.85, y: 30, duration: 0.9, ease: "back.out(1.4)" }, "-=0.7")
-        .from(rightCardRef.current, { opacity: 0, scale: 0.85, y: -30, duration: 0.9, ease: "back.out(1.4)" }, "-=0.8")
-        // Memento character stagger (clean, upright, no slant/tilt, identical timing)
-        .from(".memento-char", {
-          opacity: 0,
-          y: 60,
-          duration: 1.0,
-          stagger: 0.04,
-          ease: "power3.out",
-          clearProps: "transform,opacity",
-        }, "-=0.8")
-        .from(".hero-tagline", { opacity: 0, y: 20, duration: 0.8 }, "-=0.5");
+      // Header fades in
+      loadTl.from(".hero-header", { opacity: 0, y: -20, duration: 0.7 })
+        // Text Layer: Smoothly glides up and settles into sharp focus
+        .fromTo(
+          textLayerRef.current,
+          { y: 60, opacity: 0, scale: 0.95 },
+          { y: 0, opacity: 1, scale: 1, duration: 1.2 },
+          "-=0.4"
+        )
+        // Model Cutout Layer: Ascends with 3D depth from bottom, settling in front of text
+        .fromTo(
+          modelLayerRef.current,
+          { y: 80, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.2 },
+          "-=1.0"
+        )
+        // Floating Hearts: Gentle staggered float and scale into position
+        .fromTo(
+          ".decorative-heart",
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, stagger: 0.1, duration: 0.8, ease: "back.out(1.6)" },
+          "-=0.6"
+        )
+        // Subtle ambient glow pulse / scale
+        .fromTo(
+          ".ambient-glow-orb",
+          { scale: 0.8, opacity: 0 },
+          { scale: 1, opacity: 0.75, duration: 1.5, ease: "power1.out" },
+          "-=1.0"
+        )
+        // Side Action Buttons: Glide in dynamically from screen edges
+        .fromTo(
+          leftBtnRef.current,
+          { x: "-130%", opacity: 0 },
+          { x: "0%", opacity: 1, duration: 0.8, ease: "power2.out" },
+          "-=0.8"
+        )
+        .fromTo(
+          rightBtnRef.current,
+          { x: "130%", opacity: 0 },
+          { x: "0%", opacity: 1, duration: 0.8, ease: "power2.out" },
+          "-=0.8"
+        );
 
-      // Floating ambient motion for cards
-      gsap.set(leftCardRef.current, { rotation: -12 });
-      gsap.to(leftCardRef.current, {
-        y: -15,
-        rotation: -16,
-        duration: 4.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
+      // 2. Looping Headline Alternator: Perfectly symmetric transitions
+      gsap.set(phrase1Ref.current, { y: 0, opacity: 1, pointerEvents: "auto" });
+      gsap.set(phrase2Ref.current, { y: 24, opacity: 0, pointerEvents: "none" });
+
+      const loopTl = gsap.timeline({ repeat: -1, delay: 2.5 });
+
+      loopTl
+        // 1. Hold Phrase 1 ("made to mean something.")
+        .to({}, { duration: 3.5 })
+        // 2. Phrase 1 exits upwards
+        .to(phrase1Ref.current, { y: -24, opacity: 0, duration: 0.5, ease: "power2.inOut" })
+        .set(phrase1Ref.current, { pointerEvents: "none" })
+        // 3. Prepare Phrase 2 at bottom & animate in
+        .set(phrase2Ref.current, { y: 24, opacity: 0 })
+        .to(phrase2Ref.current, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, "<0.08")
+        .set(phrase2Ref.current, { pointerEvents: "auto" })
+        .to(".heart-pulse", { scale: 1.25, duration: 0.25, yoyo: true, repeat: 1, ease: "back.out(2)" }, "<0.1")
+        // 4. Hold Phrase 2 ("Little more you everyday .")
+        .to({}, { duration: 3.5 })
+        // 5. Phrase 2 exits upwards
+        .to(phrase2Ref.current, { y: -24, opacity: 0, duration: 0.5, ease: "power2.inOut" })
+        .set(phrase2Ref.current, { pointerEvents: "none" })
+        // 6. Prepare Phrase 1 at bottom & animate in
+        .set(phrase1Ref.current, { y: 24, opacity: 0 })
+        .to(phrase1Ref.current, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, "<0.08")
+        .set(phrase1Ref.current, { pointerEvents: "auto" })
+        .to(".heart-pulse", { scale: 1.25, duration: 0.25, yoyo: true, repeat: 1, ease: "back.out(2)" }, "<0.1");
+
+      // Header Dark Mode Toggle is now handled by the scroll event listener below
+
+    }, containerRef);
+
+    // Highly reliable scroll listener to detect if the header is over a dark section
+    const handleScroll = () => {
+      const darkSections = document.querySelectorAll(".dark-section");
+      let isCurrentlyDark = false;
+      const headerMidpoint = 40; // Approx vertical middle of the header
+
+      darkSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        // If the section spans across the header midpoint, we are over a dark section
+        if (rect.top <= headerMidpoint && rect.bottom >= headerMidpoint) {
+          isCurrentlyDark = true;
+        }
       });
 
-      gsap.set(rightCardRef.current, { rotation: 5 });
-      gsap.to(rightCardRef.current, {
-        y: 15,
-        rotation: 10,
-        duration: 5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.4,
-      });
-
-      // Subtle ambient breathing for Memento (Foreground depth layer)
-      gsap.to(mementoRef.current, {
-        y: 8,
-        duration: 5.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.2,
-      });
-
-      // Subtle ambient counter-drift for Studio (Background depth layer)
-      gsap.to(studioRef.current, {
-        y: -6,
-        duration: 6.0,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-    }, rootRef);
-
-    // Mouse parallax tracking with 4 distinct depth planes (Concept 3)
-    const handleMouseMove = (e: MouseEvent) => {
-      const { innerWidth, innerHeight } = window;
-      const xNorm = (e.clientX / innerWidth - 0.5) * 2;
-      const yNorm = (e.clientY / innerHeight - 0.5) * 2;
-
-      // Layer 1 (Deepest): Studio (mild counter-drift)
-      gsap.to(studioRef.current, {
-        x: -xNorm * 10,
-        y: -yNorm * 8,
-        duration: 1.4,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-
-      // Layer 2 (Mid-ground): Right Heart Earring Card
-      gsap.to(rightCardRef.current, {
-        x: -xNorm * 18,
-        y: -yNorm * 16,
-        duration: 1.2,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-
-      // Layer 3 (Foreground Typography): Memento (moves forward with mouse)
-      gsap.to(mementoRef.current, {
-        x: xNorm * 12,
-        y: yNorm * 10,
-        duration: 1.3,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-
-      // Layer 4 (Extreme Foreground): Left Slanted Necklace Card (glides over M of Memento)
-      gsap.to(leftCardRef.current, {
-        x: xNorm * 24,
-        y: yNorm * 22,
-        duration: 1.2,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
+      setIsHeaderDark(isCurrentlyDark);
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
       ctx.revert();
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <section
-      ref={rootRef}
-      className="relative min-h-[90vh] sm:min-h-screen w-full text-[#1B4083] flex flex-col pb-16"
+      ref={containerRef}
+      className="relative w-full h-screen bg-transparent flex flex-col items-center justify-start overflow-hidden select-none"
     >
-      {/* SVG Defs for organic shapes */}
-      <svg width="0" height="0" className="absolute pointer-events-none">
-        <defs>
-          <clipPath id="uneven-heart" clipPathUnits="objectBoundingBox">
-            <path d="M 0.5 0.25 C 0.35 0.0, 0.1 0.05, 0.05 0.25 C -0.05 0.5, 0.3 0.8, 0.5 0.98 C 0.8 0.75, 1.05 0.45, 0.95 0.2 C 0.85 0.0, 0.6 0.05, 0.5 0.25 Z" />
-          </clipPath>
-        </defs>
-      </svg>
+      {/* ===================================================================== */}
+      {/* TOP HEADER NAVIGATION                                                   */}
+      {/* ===================================================================== */}
+      {mounted && (
+        <header className={`hero-header fixed top-0 left-0 z-[100] flex w-full items-center justify-between px-5 sm:px-10 lg:px-16 py-4 sm:py-5 lg:py-6 max-w-full bg-transparent pointer-events-none transition-colors duration-500 ${isHeaderDark ? 'text-[#FAF6F0]' : 'text-[#1B4083]'}`}>
+          <div className="flex items-center gap-8 lg:gap-12 xl:gap-16 pointer-events-auto">
+            <Link href="/" className="w-24 sm:w-28 lg:w-36 min-h-[36px] flex items-center shrink-0 pointer-events-auto">
+              <Image src="/images/logo-blue-hd.png" alt="Studio Memento" width={180} height={70} className={`w-full h-auto object-contain transition-all duration-500 ${isHeaderDark ? 'brightness-0 invert' : ''}`} />
+            </Link>
+            <nav className={`hidden md:flex items-center gap-8 lg:gap-12 xl:gap-14 text-[1.02rem] font-medium tracking-wide z-40 px-6 py-2 rounded-full backdrop-blur-md shadow-sm transition-all duration-500 ${isHeaderDark ? 'bg-white/10 text-white' : 'bg-white/40 text-[#1B4083]'}`}>
+              <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
+              <a href="https://studiomemento.in/" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">Collection</a>
+              <Link href="/gallery" className="hover:opacity-70 transition-opacity">Gallery</Link>
+              <Link href="/contact" className="hover:opacity-70 transition-opacity">Contact</Link>
+            </nav>
+          </div>
+          <div className="flex items-center gap-3 sm:gap-4 z-40 shrink-0 ml-auto pointer-events-auto">
+            <button type="button" aria-label="Toggle Menu" onClick={toggleMenu} className={`flex md:hidden h-[2.6rem] px-4 items-center justify-center rounded-full border-2 transition-all duration-500 active:scale-95 z-40 shadow-xs backdrop-blur-md ${isHeaderDark ? 'border-[#FAF6F0] text-[#FAF6F0] bg-white/10 hover:bg-white/20' : 'border-[#1B4083] text-[#1B4083] bg-white/50 hover:bg-white'}`}>
+              {isMenuOpen ? (
+                <><svg className="h-[17px] w-[17px] mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg><span className="text-[13.5px] font-medium tracking-wide">Menu</span></>
+              ) : (
+                <><span className="text-[13.5px] font-medium tracking-wide mr-2">Menu</span><svg className="h-[17px] w-[17px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg></>
+              )}
+            </button>
+          </div>
+        </header>
+      )}
 
-      {/* Top Header Navigation */}
-      <header className="hero-header relative z-[10000] flex w-full items-center justify-between px-6 py-6 sm:px-10 sm:py-8 lg:px-16 lg:py-10 max-w-full">
-        {/* Logo */}
-        <Link href="/" className="inline-block transition-opacity hover:opacity-85 z-[10000] shrink-0" aria-label="Studio Memento Home">
-          <Image
-            src="/images/logo_1.png"
-            alt="studio memento"
-            width={180}
-            height={70}
-            priority
-            className="h-10 sm:h-12 w-auto object-contain"
-          />
-        </Link>
+      {/* ============================================================= */}
+      {/* CONTINUOUS AMBIENT GLOWS (Transparently merges with page)     */}
+      {/* ============================================================= */}
+      <div className="ambient-glow-orb absolute -left-20 top-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-[#FFB1C5]/30 blur-3xl pointer-events-none" />
+      <div className="ambient-glow-orb absolute -right-20 top-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-[#FFA8BE]/30 blur-3xl pointer-events-none" />
+      <div className="ambient-glow-orb absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#FFB1C5]/15 to-transparent pointer-events-none" />
 
-        {/* Center Navigation */}
-        <nav className="hidden lg:flex items-center gap-14 text-[1.05rem] font-medium tracking-wide text-[#1B4083] z-[10000]">
-          <Link href="/about" className="hover:opacity-70 transition-opacity">About</Link>
-          <a href="https://studiomemento.in/" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity">Collection</a>
-          <Link href="/gallery" className="hover:opacity-70 transition-opacity">Gallery</Link>
-          <Link href="/contact" className="hover:opacity-70 transition-opacity">Contact</Link>
-        </nav>
+      {/* ============================================================= */}
+      {/* FLOATING DECORATIVE HEARTS                                    */}
+      {/* ============================================================= */}
+      {/* Far Left White Heart */}
+      <div className="decorative-heart absolute left-4 sm:left-8 md:left-12 lg:left-16 top-[46%] -translate-y-1/2 z-10 pointer-events-none filter drop-shadow-[0_4px_16px_rgba(255,255,255,0.95)]">
+        <svg className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 text-white fill-current rotate-[-15deg] drop-shadow-sm" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+      </div>
 
-        {/* Right CTA & Mobile Menu */}
-        <div className="flex items-center gap-2 sm:gap-3 z-[10000] shrink-0">
-          
-          {/* Desktop CTA (Hidden on Mobile) */}
-          <Link
-            href="/appointment"
-            className="hidden sm:flex h-[3.2rem] items-center rounded-full bg-[#1B4083] px-8 text-[15px] font-medium tracking-wide text-white shadow-md transition-all duration-300 hover:bg-[#0F2753]"
-          >
-            Book your Slot!!
-          </Link>
-          <Link
-            href="/appointment"
-            aria-label="Book appointment slot"
-            className="hidden sm:flex h-[3.2rem] w-[3.2rem] items-center justify-center rounded-full bg-[#FFC5D3] text-[#1B4083] transition-all duration-300 hover:bg-[#ffb0c2]"
-          >
-            <svg className="h-[22px] w-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </Link>
+      {/* Far Right White Heart */}
+      <div className="decorative-heart absolute right-4 sm:right-8 md:right-12 lg:right-16 top-[58%] -translate-y-1/2 z-10 pointer-events-none filter drop-shadow-[0_4px_16px_rgba(255,255,255,0.95)]">
+        <svg className="w-10 h-10 sm:w-13 sm:h-13 md:w-15 md:h-15 text-white fill-current rotate-[12deg] drop-shadow-sm" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+      </div>
 
-          {/* Mobile Menu Button (Hidden on Desktop) */}
-          <button 
-            aria-label="Toggle Menu"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex lg:hidden h-[2.8rem] px-5 items-center justify-center rounded-full border-2 border-[#1B4083]/20 text-[#1B4083] bg-white/30 backdrop-blur-md transition-all active:scale-95 z-[10000]"
-          >
-            {isMenuOpen ? (
-              <>
-                <span className="text-[14px] font-medium tracking-wide mr-2">Close</span>
-                <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </>
-            ) : (
-              <>
-                <span className="text-[14px] font-medium tracking-wide mr-2">Menu</span>
-                <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </>
-            )}
-          </button>
+      {/* ============================================================= */}
+      {/* MOBILE POLAROID STRIP (Only visible on md and below)          */}
+      {/* ============================================================= */}
+      <div className="absolute top-[16vh] xs:top-[18vh] left-0 w-full z-0 md:hidden pointer-events-none">
+        <MobilePolaroidStrip />
+      </div>
 
-        </div>
-      </header>
-
-      {/* Mobile Menu Overlay */}
-      <div 
-        className={`fixed inset-0 z-[9999] bg-[#FAF6F0] text-[#1B4083] flex flex-col items-center justify-center transition-all duration-500 ease-in-out lg:hidden ${isMenuOpen ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-full opacity-0 pointer-events-none'}`}
+      {/* ============================================================= */}
+      {/* 1-1 REPLICA SCENE: TYPOGRAPHY LAYER (z-10: Behind Model)     */}
+      {/* ============================================================= */}
+      <div
+        ref={textLayerRef}
+        className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center justify-start pt-[36vh] xs:pt-[39vh] sm:pt-[32vh] md:pt-32 lg:pt-36 text-center px-4"
       >
-        <div className="flex flex-col items-center gap-8 text-2xl font-display font-bold">
-          <Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
-          <Link href="/about" onClick={() => setIsMenuOpen(false)}>About</Link>
-          <a href="https://studiomemento.in/" target="_blank" rel="noopener noreferrer" onClick={() => setIsMenuOpen(false)}>Collection</a>
-          <Link href="/gallery" onClick={() => setIsMenuOpen(false)}>Gallery</Link>
-          <Link href="/contact" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+        <div className="relative w-full flex flex-col items-center justify-center">
+          {/* ========================================================= */}
+          {/* PHRASE 1: "made to mean something ."                      */}
+          {/* ========================================================= */}
+          <div
+            ref={phrase1Ref}
+            className="relative z-10 w-full flex flex-col items-center justify-center text-center will-change-transform select-none opacity-0"
+          >
+            {/* Top Line */}
+            <div className="flex items-baseline justify-center gap-x-2 xs:gap-x-3 sm:gap-x-5 md:gap-x-7 whitespace-nowrap">
+              <span className="font-display text-[13.5vw] sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[9.5rem] 2xl:text-[10.5rem] font-semibold sm:font-medium tracking-[-0.035em] text-[#15559D] leading-[0.88] relative">
+                made to
+                <span className="decorative-heart heart-pulse absolute -top-4 sm:-top-7 md:-top-9 right-1 sm:right-3 md:right-4 text-[#FF8EA1] pointer-events-none filter drop-shadow-sm">
+                  <svg className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 fill-current rotate-[14deg]" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </span>
+              </span>
+              <span
+                className="text-[13.5vw] sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[9.5rem] 2xl:text-[10.5rem] font-medium sm:font-normal italic tracking-tight text-[#FF8EA1] leading-[0.88] ml-1 sm:ml-2"
+                style={{ fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif" }}
+              >
+                mean
+              </span>
+            </div>
+            {/* Bottom Line */}
+            <div className="relative mt-3 sm:mt-2 md:mt-3 flex items-baseline justify-center whitespace-nowrap">
+              <span className="decorative-heart heart-pulse absolute -left-6 sm:-left-12 md:-left-16 lg:-left-20 top-0 sm:top-2 md:top-3 text-[#FF8EA1] pointer-events-none filter drop-shadow-sm">
+                <svg className="w-6 h-6 sm:w-8 sm:h-8 md:w-11 md:h-11 fill-current rotate-[-16deg]" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </span>
+              <span className="font-display text-[15.5vw] sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[9.5rem] 2xl:text-[10.5rem] font-semibold sm:font-medium tracking-[0.015em] text-[#15559D] leading-[0.88] relative">
+                something
+                <span className="decorative-heart heart-pulse absolute bottom-2 sm:bottom-3 md:bottom-5 lg:bottom-6 -right-6 sm:-right-9 md:-right-12 lg:-right-14 text-[#15559D] pointer-events-none">
+                  <svg className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 lg:w-10 lg:h-10 fill-current rotate-[14deg]" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          {/* ========================================================= */}
+          {/* PHRASE 2: "Little more you everyday ."                     */}
+          {/* ========================================================= */}
+          <div
+            ref={phrase2Ref}
+            className="absolute inset-0 z-10 w-full flex flex-col items-center justify-center text-center will-change-transform select-none opacity-0 pointer-events-none"
+          >
+            <div className="flex items-baseline justify-center gap-x-2 xs:gap-x-3 sm:gap-x-4 md:gap-x-6 whitespace-nowrap">
+              <span className="font-display text-[13vw] sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[9.5rem] 2xl:text-[10.5rem] font-semibold sm:font-medium tracking-[-0.035em] text-[#15559D] leading-[0.88] relative">
+                Little more
+                <span className="decorative-heart heart-pulse absolute -top-4 sm:-top-7 md:-top-9 right-1 sm:right-3 md:right-4 text-[#FF8EA1] pointer-events-none filter drop-shadow-sm">
+                  <svg className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 fill-current rotate-[14deg]" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </span>
+              </span>
+              <span
+                className="text-[13vw] sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[9.5rem] 2xl:text-[10.5rem] font-medium sm:font-normal italic tracking-tight text-[#FF8EA1] leading-[0.88] ml-1 sm:ml-2"
+                style={{ fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif" }}
+              >
+                you
+              </span>
+            </div>
+            <div className="relative mt-3 sm:mt-2 md:mt-3 flex items-baseline justify-center whitespace-nowrap">
+              <span className="decorative-heart heart-pulse absolute -left-6 sm:-left-12 md:-left-16 lg:-left-20 top-0 sm:top-2 md:top-3 text-[#FF8EA1] pointer-events-none filter drop-shadow-sm">
+                <svg className="w-6 h-6 sm:w-8 sm:h-8 md:w-11 md:h-11 fill-current rotate-[-16deg]" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </span>
+              <span className="font-display text-[15.5vw] sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[9.5rem] 2xl:text-[10.5rem] font-semibold sm:font-medium tracking-[0.015em] text-[#15559D] leading-[0.88] relative">
+                everyday
+                <span className="decorative-heart heart-pulse absolute bottom-2 sm:bottom-3 md:bottom-5 lg:bottom-6 -right-6 sm:-right-9 md:-right-12 lg:-right-14 text-[#15559D] pointer-events-none">
+                  <svg className="w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 lg:w-10 lg:h-10 fill-current rotate-[14deg]" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </div>
         </div>
-        <Link 
-          href="/appointment" 
-          onClick={() => setIsMenuOpen(false)}
-          className="mt-12 border border-[#1B4083] px-8 py-3 rounded-full text-sm uppercase tracking-widest font-bold hover:bg-[#1B4083] hover:text-white transition-colors"
+      </div>
+
+      {/* ============================================================= */}
+      {/* FOREGROUND MODEL CUTOUT (z-20: Overlapping on top of text)    */}
+      {/* ============================================================= */}
+      <div
+        ref={modelLayerRef}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 z-20 pointer-events-none h-[56vh] xs:h-[58vh] sm:h-[55vh] md:h-[57vh] lg:h-[59vh] max-h-[620px] w-auto aspect-[464/594] opacity-0"
+        style={{
+          maskImage: "linear-gradient(to bottom, black 0%, black 72%, transparent 96%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 72%, transparent 96%)",
+        }}
+      >
+        <Image
+          src="/images/model-cutout.png"
+          alt="Studio Memento model with handcrafted jewelry"
+          fill
+          priority
+          sizes="(max-width: 768px) 420px, (max-width: 1280px) 520px, 620px"
+          className="object-contain object-bottom filter drop-shadow-[0_12px_28px_rgba(21,85,157,0.08)]"
+        />
+        <span className="decorative-heart absolute left-[2%] sm:left-[4%] bottom-[12%] text-[#FF8EA1] pointer-events-none z-30 filter drop-shadow-sm">
+          <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 fill-current rotate-[-18deg]" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </span>
+      </div>
+
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-24 sm:h-32 pointer-events-none z-20"
+        style={{
+          background: "radial-gradient(ellipse at 50% 100%, rgba(255, 200, 212, 0.45) 0%, rgba(250, 246, 240, 0.75) 45%, transparent 75%)",
+          filter: "blur(20px)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ============================================================= */}
+      {/* SIDE ACTION BUTTON 1: "Book your slot!" (Appointment)         */}
+      {/* ============================================================= */}
+      <div
+        ref={leftBtnRef}
+        className="absolute left-0 bottom-20 sm:bottom-18 md:bottom-22 lg:bottom-24 z-30 pointer-events-auto select-none opacity-0"
+      >
+        <Link
+          href="/appointment"
+          className="group flex items-center gap-2 sm:gap-3.5 pl-3 sm:pl-5 md:pl-7 pr-4 sm:pr-6 md:pr-8 py-2 sm:py-3.5 md:py-4 rounded-r-[1.75rem] bg-[#1B4083] hover:bg-[#0F2753] shadow-[0_8px_24px_rgba(27,64,131,0.25)] hover:shadow-[0_14px_40px_rgba(15,39,83,0.38)] border border-white/20 border-l-0 text-white transition-all duration-300 hover:translate-x-2 active:scale-95 cursor-pointer"
+          aria-label="Book your slot! (Appointment)"
         >
-          Book an Appointment
+          <span className="flex h-6 w-6 sm:h-8 sm:w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-white/15 text-[#FFC8D4] group-hover:bg-[#FFC8D4] group-hover:text-[#1B4083] group-hover:scale-110 transition-all duration-300 shrink-0 shadow-xs">
+            <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 fill-current transition-transform duration-300 group-hover:scale-125" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </span>
+          <div className="flex flex-col items-start leading-none">
+            <div className="font-display font-medium text-[12px] sm:text-[15px] md:text-[16px] tracking-tight text-white flex items-center gap-1">
+              <span>Book your slot!</span>
+            </div>
+            <span className="text-[9px] sm:text-[10.5px] md:text-[11px] font-sans font-semibold text-[#FFC8D4] tracking-wider uppercase mt-0.5 sm:mt-1">
+              Appointment
+            </span>
+          </div>
         </Link>
       </div>
 
-      {/* Hero Content */}
-      <div className="relative z-30 flex-1 w-full px-4 sm:px-8 lg:px-[6%] pt-[4vh] sm:pt-[8vh] flex flex-col max-w-[1920px] mx-auto">
-        <div className="relative w-full flex-1 min-h-[660px] sm:min-h-[500px]">
-          
-          {/* Typography: Editorial Contrast Pairing with 3D Parallax & Staggered Reveal */}
-          {/* Studio (Modern Sans: Bricolage Grotesque) */}
-          <h1 
-            ref={studioRef}
-            className="hero-title-text absolute top-0 left-2 sm:left-4 font-display font-bold text-[#1A4083] tracking-[-0.03em] select-none z-10 text-[16vw] sm:text-[clamp(5.2rem,14.5vw,16.5rem)] leading-[0.88] will-change-transform pointer-events-auto whitespace-nowrap"
-            aria-label="Studio"
-          >
-            {studioChars.map((char, index) => (
-              <span 
-                key={index} 
-                className="studio-char inline-block will-change-transform transition-transform duration-300 hover:-translate-y-2 cursor-default"
-              >
-                {char}
-              </span>
-            ))}
-          </h1>
-          
-          {/* Memento (Same font as Studio: Bricolage Grotesque, identical size & weight) */}
-          <h1 
-            ref={mementoRef}
-            className="hero-title-text absolute top-[66px] sm:top-[42%] right-2 sm:right-auto sm:left-[23%] lg:left-[24%] font-display font-bold text-[#1A4083] tracking-[-0.03em] select-none z-30 text-[16vw] sm:text-[clamp(5.2rem,14.5vw,16.5rem)] leading-[0.88] will-change-transform pointer-events-auto text-right sm:text-left whitespace-nowrap"
-            aria-label="Memento"
-          >
-            {mementoChars.map((char, index) => (
-              <span 
-                key={index} 
-                className="memento-char inline-block will-change-transform transition-transform duration-300 hover:-translate-y-2 cursor-default"
-              >
-                {char}
-              </span>
-            ))}
-          </h1>
-
-          {/* --- DESKTOP FLOATING IMAGES (Hidden on Mobile) --- */}
-          {/* Right Uneven Heart Card (Earrings) - Sticking out to the right */}
-          <div
-            ref={rightCardRef}
-            className="hidden sm:block absolute top-[6%] right-[3%] z-20 w-[26vw] min-w-[200px] max-w-[360px] aspect-square drop-shadow-2xl"
-          >
-            {/* The Clipped Image */}
-            <div className="relative w-full h-full overflow-hidden" style={{ clipPath: "url(#uneven-heart)" }}>
-              <Image
-                src="/images/earrings.png"
-                alt="Statement Gold Drop Earrings"
-                fill
-                priority
-                sizes="(max-width: 768px) 50vw, 30vw"
-                className="object-cover object-center scale-[1.15]"
-              />
-            </div>
-
-            {/* The Outline Stroke */}
-            <svg 
-              className="absolute inset-0 w-full h-full pointer-events-none" 
-              viewBox="0 0 1 1" 
-              preserveAspectRatio="none"
-            >
-              <path 
-                d="M 0.5 0.25 C 0.35 0.0, 0.1 0.05, 0.05 0.25 C -0.05 0.5, 0.3 0.8, 0.5 0.98 C 0.8 0.75, 1.05 0.45, 0.95 0.2 C 0.85 0.0, 0.6 0.05, 0.5 0.25 Z" 
-                fill="none" 
-                stroke="#FFC5D3" 
-                strokeWidth="0.015" 
-              />
+      {/* ============================================================= */}
+      {/* SIDE ACTION BUTTON 2: "Get your memento!" (Collections)       */}
+      {/* ============================================================= */}
+      <div
+        ref={rightBtnRef}
+        className="absolute right-0 bottom-3 sm:bottom-18 md:bottom-22 lg:bottom-24 z-30 pointer-events-auto select-none opacity-0"
+      >
+        <a
+          href="#collection"
+          onClick={(e) => {
+            e.preventDefault();
+            scrollToId("#collection");
+          }}
+          className="group flex items-center gap-2 sm:gap-3.5 pr-3 sm:pr-5 md:pr-7 pl-4 sm:pl-6 md:pl-8 py-2 sm:py-3.5 md:py-4 rounded-l-[1.75rem] bg-[#1B4083] hover:bg-[#0F2753] shadow-[0_8px_24px_rgba(27,64,131,0.25)] hover:shadow-[0_14px_40px_rgba(15,39,83,0.38)] border border-white/20 border-r-0 text-white transition-all duration-300 hover:-translate-x-2 active:scale-95 cursor-pointer"
+          aria-label="Get your memento! (Collections)"
+        >
+          <div className="flex flex-col items-end leading-none text-right">
+            <span className="font-display font-medium text-[12px] sm:text-[15px] md:text-[16px] tracking-tight text-white">
+              Get your memento!
+            </span>
+            <span className="text-[9px] sm:text-[10.5px] md:text-[11px] font-sans font-semibold text-[#FFC8D4] tracking-wider uppercase mt-0.5 sm:mt-1">
+              Collections
+            </span>
+          </div>
+          <span className="flex h-6 w-6 sm:h-8 sm:w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-white/15 text-[#FFC8D4] group-hover:bg-[#FFC8D4] group-hover:text-[#1B4083] group-hover:translate-x-0.5 transition-all duration-300 shrink-0">
+            <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-          </div>
-
-          {/* Left Slanted Square Card (Necklace) - Positioned to the left of M of Memento */}
-          <div
-            ref={leftCardRef}
-            className="hidden sm:block absolute top-[52%] left-[1%] sm:left-[1%] lg:left-[2%] z-20 w-[18vw] min-w-[160px] max-w-[250px] aspect-square rounded-[2rem] overflow-hidden border-[8px] border-[#FFC5D3] shadow-2xl"
-          >
-            <Image
-              src="/images/necklace.png"
-              alt="Turquoise Sun Pendant Necklace"
-              fill
-              priority
-              sizes="(max-width: 768px) 40vw, 25vw"
-              className="object-cover object-center scale-[1.1]"
-            />
-          </div>
-
-          {/* --- MOBILE STATIC IMAGES (Hidden on Desktop) --- */}
-          <div className="absolute top-[180px] left-0 w-full h-[280px] flex sm:hidden flex-row items-center justify-center z-20 px-3">
-            
-            {/* The Golden Chain SVG (Placed behind the images) */}
-            <svg 
-              className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-hidden" 
-              viewBox="0 0 400 280"
-            >
-              {/* Continuous chain draped behind the images */}
-              <path 
-                d="M -20,25 Q 200,250 420,25" 
-                fill="none" 
-                stroke="#C5A059" 
-                strokeWidth="4.5" 
-                strokeDasharray="2,7" 
-                strokeLinecap="round" 
-              />
-            </svg>
-
-            {/* Enlarged Centered Heart Earring Card */}
-            <div className="hero-title-text relative w-[52vw] max-w-[205px] aspect-square drop-shadow-2xl z-30">
-              <div className="relative w-full h-full overflow-hidden" style={{ clipPath: "url(#uneven-heart)" }}>
-                <Image
-                  src="/images/earrings.png"
-                  alt="Statement Gold Drop Earrings"
-                  fill
-                  sizes="60vw"
-                  className="object-cover object-center scale-[1.15]"
-                />
-              </div>
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1 1" preserveAspectRatio="none">
-                <path d="M 0.5 0.25 C 0.35 0.0, 0.1 0.05, 0.05 0.25 C -0.05 0.5, 0.3 0.8, 0.5 0.98 C 0.8 0.75, 1.05 0.45, 0.95 0.2 C 0.85 0.0, 0.6 0.05, 0.5 0.25 Z" fill="none" stroke="#FFC5D3" strokeWidth="0.02" />
-              </svg>
-            </div>
-            
-            {/* Enlarged Slanted Square Necklace Card */}
-            <div className="hero-title-text relative w-[46vw] max-w-[175px] aspect-square rounded-[1.8rem] overflow-hidden border-[5px] border-[#FFC5D3] shadow-2xl transform rotate-[-8deg] mt-16 -ml-5 z-20">
-              <Image
-                src="/images/necklace.png"
-                alt="Turquoise Sun Pendant Necklace"
-                fill
-                sizes="60vw"
-                className="object-cover object-center scale-[1.1]"
-              />
-            </div>
-          </div>
-
-          {/* Bottom Right Tagline */}
-          <div className="hero-tagline absolute bottom-[78px] sm:bottom-[-5%] right-4 sm:right-[10%] text-right sm:text-left z-40">
-            <p className="font-display text-[1.1rem] sm:text-[1.4rem] md:text-[1.7rem] font-semibold tracking-tight text-[#1a4182] leading-tight">
-              Romanticize Your Becoming
-            </p>
-            <p className="mt-1 sm:mt-2 text-xs sm:text-base md:text-[1.1rem] font-serif italic font-normal text-[#1a4182]/80">
-              Start your own story
-            </p>
-          </div>
-
-          {/* Mobile Bottom Dual Action Buttons (Side-by-Side) */}
-          <div className="absolute bottom-2 left-0 w-full flex sm:hidden items-center justify-center gap-2.5 z-50 px-3">
-            {/* Primary Button */}
-            <Link
-              href="/appointment"
-              className="flex-1 h-[3.2rem] flex items-center justify-center rounded-full bg-[#1B4083] px-2 text-[13.5px] font-semibold tracking-tight text-white shadow-xl transition-all duration-300 active:scale-95 text-center"
-            >
-              Book an appointment
-            </Link>
-
-            {/* Secondary Button */}
-            <a
-              href="#collection"
-              className="flex-1 h-[3.2rem] flex items-center justify-center rounded-full bg-white/80 backdrop-blur-md border-2 border-[#1B4083]/20 px-2 text-[13.5px] font-semibold tracking-tight text-[#1B4083] shadow-md transition-all duration-300 active:scale-95 text-center"
-            >
-              Explore Collection
-            </a>
-          </div>
-        </div>
+          </span>
+        </a>
       </div>
     </section>
   );
 }
+

@@ -10,6 +10,9 @@ export const appointments = sqliteTable(
     phone: text("phone").notNull(),
     email: text("email"),
     notes: text("notes"),
+    status: text("status").default("confirmed").notNull(), // "pending" | "confirmed" | "cancelled"
+    verificationToken: text("verification_token"),
+    verifiedAt: integer("verified_at", { mode: "timestamp_ms" }),
     createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
   },
   (table) => ({

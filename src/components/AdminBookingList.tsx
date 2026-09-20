@@ -12,6 +12,7 @@ type Appointment = {
   phone: string;
   email: string | null;
   notes: string | null;
+  status?: string | null;
   createdAt: Date;
 };
 
@@ -175,6 +176,7 @@ export default function AdminBookingList({
                   <tr>
                     <th className="px-6 py-4 font-bold">Date & Time</th>
                     <th className="px-6 py-4 font-bold">Client Name</th>
+                    <th className="px-6 py-4 font-bold">Status</th>
                     <th className="px-6 py-4 font-bold">Contact</th>
                     <th className="px-6 py-4 font-bold">Notes</th>
                     <th className="px-6 py-4 font-bold text-right">Actions</th>
@@ -183,7 +185,7 @@ export default function AdminBookingList({
                 <tbody className="divide-y divide-[#1B4083]/5">
                   {filteredAppointments.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-6 py-12 text-center text-gray-400">
+                      <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
                         No matching appointments found.
                       </td>
                     </tr>
@@ -196,6 +198,19 @@ export default function AdminBookingList({
                         </td>
                         <td className="px-6 py-4">
                           <span className="font-semibold">{apt.name}</span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {apt.status === "pending" ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 border border-amber-200">
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+                              Pending
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700 border border-emerald-200">
+                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                              Confirmed
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="font-medium">{apt.phone}</div>
@@ -231,7 +246,18 @@ export default function AdminBookingList({
                   <div key={apt.id} className="p-5 flex flex-col gap-3">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="font-bold text-[#1B4083]">{apt.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-[#1B4083]">{apt.name}</span>
+                          {apt.status === "pending" ? (
+                            <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-bold uppercase text-amber-800">
+                              Pending
+                            </span>
+                          ) : (
+                            <span className="inline-block rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold uppercase text-emerald-800">
+                              Confirmed
+                            </span>
+                          )}
+                        </div>
                         <div className="text-xs text-[#1B4083]/70 font-medium mt-1">
                           {apt.date} at {apt.slot}
                         </div>

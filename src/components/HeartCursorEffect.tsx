@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 const BLUE_HEART_COLORS = [
-  "#1A4083", // Studio Memento Atelier Navy
+  "#1A4083", // Studio Memento Navy
   "#2658B5", // Vibrant Royal Blue
   "#3B82F6", // Bright Azure
   "#1B4083", // Classic Sm Blue

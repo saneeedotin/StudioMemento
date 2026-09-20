@@ -3,11 +3,13 @@ export const SITE = {
   tagline: "wear your own story.",
   hours: "11:30 AM – 9:00 PM",
   slotMinutes: 30,
-  // PLACEHOLDER — replace with real details before launch
-  phone: "+91 90000 00000",
-  phoneHref: "tel:+919000000000",
+  // Real contact details
+  phone: "+91 96190 69460",
+  phoneHref: "tel:+919619069460",
+  whatsapp: "https://wa.me/919619069460",
   addressLine1: "Shop 10, The Signature Building, near Ganpati Mandir Road",
-  addressLine2: "opposite Mantra Restaurant & Bar, Dombivli East, Maharashtra 421201",
+  addressLine2: "Opp. Mantra Restaurant & Bar, Pendse Nagar, Dombivli East, Kalyan, Maharashtra 421201",
+  fullAddress: "Shop 10, The Signature Building, near Ganpati Mandir Road, opposite Mantra Restaurant & Bar, Dombivli, Pendse Nagar, Dombivli East, Dombivli, Kalyan, Maharashtra 421201",
   mapsLink: "https://maps.app.goo.gl/xswWsu3GhsrDhhwW9",
   email: "hello@studiomemento.in",
   instagram: "https://www.instagram.com/studiomemento.in_/",

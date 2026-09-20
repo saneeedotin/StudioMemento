@@ -1,14 +1,53 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Benedict";
+  src: url("/fonts/Benedict.woff2") format("woff2"),
+       url("/fonts/Benedict.ttf") format("truetype"),
+       url("/fonts/Benedict.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Caveat";
+  src: url("/fonts/Caveat/Caveat-VariableFont_wght.ttf") format("truetype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Estonia";
+  src: url("/fonts/Estonia/Estonia-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IndieFlower";
+  src: url("/fonts/IndieFlower/IndieFlower-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
   --font-display: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-baskervville), Baskervville, Georgia, serif;
   --font-editorial: var(--font-baskervville), Baskervville, Georgia, serif;
-  --font-script: var(--font-satisfy), Satisfy, cursive;
+  --font-script: "Caveat", "IndieFlower", cursive;
+  --font-caveat: "Caveat", cursive;
+  --font-estonia: "Estonia", cursive;
+  --font-indieflower: "IndieFlower", cursive;
+  --font-benedict: "Benedict", "Caveat", var(--font-satisfy), Satisfy, cursive;
   --font-epilogue: var(--font-epilogue), Epilogue, sans-serif;
   --font-satisfy: var(--font-satisfy), Satisfy, cursive;
+  --font-playfair: var(--font-playfair), "Playfair Display", Georgia, serif;
 
   /* Studio Memento Modular Palette */
   --color-sm-blue: #1B4083;
@@ -233,12 +272,34 @@ body {
   paint-order: stroke fill;
 }
 
+.font-benedict {
+  font-family: "Benedict", "Caveat", var(--font-satisfy), "Satisfy", cursive;
+}
+
 .font-bricolage {
   font-family: var(--font-bricolage), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
 }
 
 .font-baskervville {
   font-family: var(--font-baskervville), "Baskervville", Georgia, serif;
+}
+
+/* Cassette Spool Rotations */
+@keyframes spin-reel {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-reel {
+  animation: spin-reel 4s linear infinite;
+}
+
+.animate-spin-reel-slow {
+  animation: spin-reel 10s linear infinite;
 }
 
 /* Custom Scroll Progress Slider */
@@ -263,8 +324,13 @@ html:has(main.bg-\[\#1A4083\]) .scroll-progress-thumb {
 
 :focus-visible {
   outline: 2px solid #1B4083;
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none !important;
 }
 
 @utility container-modular {
@@ -303,3 +369,53 @@ html:has(main.bg-\[\#1A4083\]) .scroll-progress-thumb {
     scroll-behavior: auto !important;
   }
 }
+
+/* Dark Section Header Overrides */
+.hero-header.is-dark {
+  color: #FAF6F0 !important;
+}
+.hero-header.is-dark .header-logo-image {
+  filter: brightness(0) invert(1) !important;
+}
+.hero-header.is-dark .header-cta-btn {
+  background-color: #FAF6F0 !important;
+  color: #1A4083 !important;
+}
+
+/* Handwritten Note Fonts */
+.font-caveat {
+  font-family: "Caveat", cursive, sans-serif !important;
+}
+.font-estonia {
+  font-family: "Estonia", cursive, sans-serif !important;
+  -webkit-text-stroke: 0.35px currentColor;
+}
+.font-indieflower {
+  font-family: "IndieFlower", cursive, sans-serif !important;
+}
+
+/* Cassette Section Bridge on Mobile (Pulled up by 40% from previous 50% offset) */
+.cassette-mobile-bridge {
+  transform: translateY(10%);
+}
+@media (min-width: 768px) {
+  .cassette-mobile-bridge {
+    transform: none;
+  }
+  
+  /* Desktop Cassette Lower Position (Strictly desktop md: and above, zero effect on mobile) */
+  .cassette-desktop-lower {
+    bottom: -200px !important;
+  }
+}
+@media (min-width: 1024px) {
+  .cassette-desktop-lower {
+    bottom: -230px !important;
+  }
+}
+@media (min-width: 1280px) {
+  .cassette-desktop-lower {
+    bottom: -250px !important;
+  }
+}
+

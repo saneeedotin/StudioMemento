@@ -1,6 +1,7 @@
 "use client";
 
 import SubpageNav from "@/components/SubpageNav";
+import { SITE } from "@/lib/site";
 
 export default function ContactPage() {
   return (
@@ -20,20 +21,47 @@ export default function ContactPage() {
             Let&apos;s shape your <br />
             <span className="text-[#FFC8D4] italic font-light tracking-tight">next chapter.</span>
           </h1>
-          <p className="text-lg sm:text-xl opacity-80 leading-relaxed mb-12">
-            Whether you&apos;re looking to design a bespoke engagement ring, reset a family heirloom, or curate your own modular charm necklace, our studio doors are open.
-          </p>
+          <div className="w-full h-48 sm:h-64 lg:h-72 rounded-2xl overflow-hidden mb-12 shadow-lg border border-white/10 relative bg-[#1A4083]/50">
+            <iframe 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              loading="lazy" 
+              allowFullScreen 
+              referrerPolicy="no-referrer-when-downgrade" 
+              src={`https://maps.google.com/maps?q=Signature+Building,+Pendse+Nagar,+Dombivli+East,+Kalyan,+Maharashtra+421201&t=&z=16&ie=UTF8&iwloc=&output=embed`}
+            ></iframe>
+          </div>
 
           <div className="space-y-8 font-mono text-sm tracking-wide opacity-90">
             <div>
               <p className="uppercase tracking-[0.2em] opacity-60 text-xs mb-2">Studio Location</p>
-              <p>42 Atelier Row, Creative District</p>
-              <p>New York, NY 10012</p>
+              <p>Shop 10, The Signature Building,</p>
+              <p>Near Ganpati Mandir Road, Opp. Mantra Restaurant &amp; Bar,</p>
+              <p>Pendse Nagar, Dombivli East, Dombivli, Kalyan,</p>
+              <p>Maharashtra 421201</p>
+              <a
+                href={SITE.mapsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-[#FFC8D4] hover:underline mt-2 tracking-normal font-sans"
+              >
+                <span>Open in Google Maps</span>
+                <span>↗</span>
+              </a>
             </div>
             <div>
               <p className="uppercase tracking-[0.2em] opacity-60 text-xs mb-2">Direct Inquiries</p>
-              <p>hello@studiomemento.com</p>
-              <p>+1 (555) 019-8234</p>
+              <p>
+                <a href={`mailto:${SITE.email}`} className="hover:text-[#FFC8D4] transition-colors">
+                  {SITE.email}
+                </a>
+              </p>
+              <p>
+                <a href={SITE.phoneHref} className="hover:text-[#FFC8D4] transition-colors">
+                  {SITE.phone}
+                </a>
+              </p>
             </div>
           </div>
         </div>
@@ -42,7 +70,7 @@ export default function ContactPage() {
         <div className="flex-1 z-10 w-full max-w-2xl">
           <div className="bg-[#FAF6F0] rounded-[2.5rem] p-8 sm:p-12 shadow-2xl text-[#1B4083]">
             <h3 className="font-display text-3xl font-bold mb-2">Request a Consultation</h3>
-            <p className="opacity-70 mb-8 text-sm">We typically respond to bespoke inquiries within 48 hours.</p>
+            <p className="opacity-70 mb-8 text-sm">We typically respond to custom inquiries within 48 hours.</p>
             
             <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert("Thank you! Your inquiry has been submitted. We will get back to you shortly."); }}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -64,7 +92,7 @@ export default function ContactPage() {
               <div className="space-y-2">
                 <label className="text-[10px] sm:text-xs uppercase font-bold tracking-widest opacity-60 ml-2">Inquiry Type</label>
                 <select className="w-full bg-[#1A4083]/5 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#1B4083]/20 outline-none transition-all appearance-none cursor-pointer">
-                  <option>Bespoke Commission</option>
+                  <option>Custom Commission</option>
                   <option>Heirloom Redesign</option>
                   <option>Permanent Jewelry Booking</option>
                   <option>General Inquiry</option>
